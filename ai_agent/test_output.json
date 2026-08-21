@@ -1,0 +1,201 @@
+{
+  "status": "success",
+  "plan_text": "DAILY TARGET\n2135 kcal | P: 198g | C: 174g | F: 72g\n\nMEAL PLAN\n\n=== BREAKFAST ===\n[A] Protein Oats | 50g rolled oats, 250g Greek yogurt (0% fat), 15g almonds | 449 kcal | P:34.6g C:45.8g F:11.6g\n[B] Egg & Oat Scramble | 3 large eggs, 40g rolled oats, 100g Greek yogurt (0% fat) | 448 kcal | P:31.5g C:35.3g F:15.4g\n[C] Greek Yogurt Power Bowl | 300g Greek yogurt (0% fat), 30g rolled oats, 15g almonds | 410 kcal | P:35g C:30g F:12g\n\n=== SNACK 1 ===\n[A] Greek Yogurt & Fruit | 200g Greek yogurt (0% fat), 20g almonds, 50g banana | 290 kcal | P:25g C:23g F:10g\n[B] Eggs & Yogurt | 2 large eggs, 20g rolled oats, 150g Greek yogurt (0% fat) | 300 kcal | P:28g C:18g F:10g\n[C] Tuna & Rice Cakes | 100g tuna (canned in water), 2 rice cakes, 10g almonds | 250 kcal | P:28g C:25g F:7g\n\n=== LUNCH ===\n[A] Chicken & Rice Bowl | 140g cooked chicken breast, 140g cooked rice, 8g olive oil, 100g mixed vegetables | 490 kcal | P:48g C:44g F:14g\n[B] Tuna & Potato Salad | 180g tuna (canned in water), 150g boiled potato, 15g almonds | 500 kcal | P:51g C:35g F:18g\n[C] Chicken Stir-fry | 150g cooked chicken breast, 120g cooked rice, 150g mixed vegetables, 8g olive oil | 520 kcal | P:51g C:42g F:14g\n\n=== SNACK 2 ===\n[A] Greek Yogurt & Fruit | 200g Greek yogurt (0% fat), 20g almonds, 50g banana | 290 kcal | P:25g C:23g F:10g\n[B] Eggs & Yogurt | 2 large eggs, 20g rolled oats, 150g Greek yogurt (0% fat) | 300 kcal | P:28g C:18g F:10g\n[C] Chicken Slices & Rice Cakes | 100g cooked chicken breast, 2 rice cakes, 10g almonds | 300 kcal | P:35g C:28g F:8g\n\n=== DINNER ===\n[A] Chicken & Potato | 140g cooked chicken breast, 200g boiled potato, 10g olive oil, 100g mixed vegetables | 518 kcal | P:48g C:45g F:15g\n[B] Tuna & Potato | 180g tuna (canned in water), 150g boiled potato, 15g almonds | 500 kcal | P:51g C:35g F:18g\n[C] Chicken Salad | 150g cooked chicken breast, 100g mixed greens, 10g olive oil, 150g boiled potato | 500 kcal | P:48g C:35g F:18g\n\nWORKOUT PLAN\n\u26a0\ufe0f API rate limit reached and maximum retries exhausted. Please wait a minute and try again.",
+  "plan_data": {
+    "weight": 90.0,
+    "height": 178.0,
+    "age": 28,
+    "biological_age": 31,
+    "gender": "male",
+    "body_fat_pct": 18.0,
+    "body_fat_mass": 12.0,
+    "smm": 32.0,
+    "muscle_mass": 60.0,
+    "visceral_fat": 8.0,
+    "bmr": 1700.0,
+    "total_body_water": 40.0,
+    "goal": "fat_loss",
+    "ml_goal": "fat_loss",
+    "calories": 2135,
+    "protein": 198,
+    "carbs": 174,
+    "fat": 72,
+    "training_frequency": 3,
+    "allergies": "none",
+    "disease": "none",
+    "budget": "moderate",
+    "progress_context": null
+  },
+  "agent_data": {
+    "weight": 90.0,
+    "height": 178.0,
+    "age": 28,
+    "biological_age": 31,
+    "gender": "male",
+    "body_fat_pct": 18.0,
+    "body_fat_mass": 12.0,
+    "smm": 32.0,
+    "muscle_mass": 60.0,
+    "visceral_fat": 8.0,
+    "bmr": 1700.0,
+    "total_body_water": 40.0,
+    "goal": "fat_loss",
+    "ml_goal": "fat_loss",
+    "calories": 2135,
+    "protein": 198,
+    "carbs": 174,
+    "fat": 72,
+    "training_frequency": 3,
+    "allergies": "none",
+    "disease": "none",
+    "budget": "moderate",
+    "progress_context": null
+  },
+  "parsed_plan": {
+    "daily_target": {
+      "calories": 2135,
+      "protein": 198,
+      "carbs": 174,
+      "fat": 72
+    },
+    "meals": [
+      {
+        "meal_name": "BREAKFAST",
+        "options": [
+          {
+            "name": "Protein Oats",
+            "ingredients": "50g rolled oats, 250g Greek yogurt (0% fat), 15g almonds",
+            "kcal": "449 kcal",
+            "macros": "P:34.6g C:45.8g F:11.6g",
+            "option": "A"
+          },
+          {
+            "name": "Egg & Oat Scramble",
+            "ingredients": "3 large eggs, 40g rolled oats, 100g Greek yogurt (0% fat)",
+            "kcal": "448 kcal",
+            "macros": "P:31.5g C:35.3g F:15.4g",
+            "option": "B"
+          },
+          {
+            "name": "Greek Yogurt Power Bowl",
+            "ingredients": "300g Greek yogurt (0% fat), 30g rolled oats, 15g almonds",
+            "kcal": "410 kcal",
+            "macros": "P:35g C:30g F:12g",
+            "option": "C"
+          }
+        ]
+      },
+      {
+        "meal_name": "SNACK 1",
+        "options": [
+          {
+            "name": "Greek Yogurt & Fruit",
+            "ingredients": "200g Greek yogurt (0% fat), 20g almonds, 50g banana",
+            "kcal": "290 kcal",
+            "macros": "P:25g C:23g F:10g",
+            "option": "A"
+          },
+          {
+            "name": "Eggs & Yogurt",
+            "ingredients": "2 large eggs, 20g rolled oats, 150g Greek yogurt (0% fat)",
+            "kcal": "300 kcal",
+            "macros": "P:28g C:18g F:10g",
+            "option": "B"
+          },
+          {
+            "name": "Tuna & Rice Cakes",
+            "ingredients": "100g tuna (canned in water), 2 rice cakes, 10g almonds",
+            "kcal": "250 kcal",
+            "macros": "P:28g C:25g F:7g",
+            "option": "C"
+          }
+        ]
+      },
+      {
+        "meal_name": "LUNCH",
+        "options": [
+          {
+            "name": "Chicken & Rice Bowl",
+            "ingredients": "140g cooked chicken breast, 140g cooked rice, 8g olive oil, 100g mixed vegetables",
+            "kcal": "490 kcal",
+            "macros": "P:48g C:44g F:14g",
+            "option": "A"
+          },
+          {
+            "name": "Tuna & Potato Salad",
+            "ingredients": "180g tuna (canned in water), 150g boiled potato, 15g almonds",
+            "kcal": "500 kcal",
+            "macros": "P:51g C:35g F:18g",
+            "option": "B"
+          },
+          {
+            "name": "Chicken Stir-fry",
+            "ingredients": "150g cooked chicken breast, 120g cooked rice, 150g mixed vegetables, 8g olive oil",
+            "kcal": "520 kcal",
+            "macros": "P:51g C:42g F:14g",
+            "option": "C"
+          }
+        ]
+      },
+      {
+        "meal_name": "SNACK 2",
+        "options": [
+          {
+            "name": "Greek Yogurt & Fruit",
+            "ingredients": "200g Greek yogurt (0% fat), 20g almonds, 50g banana",
+            "kcal": "290 kcal",
+            "macros": "P:25g C:23g F:10g",
+            "option": "A"
+          },
+          {
+            "name": "Eggs & Yogurt",
+            "ingredients": "2 large eggs, 20g rolled oats, 150g Greek yogurt (0% fat)",
+            "kcal": "300 kcal",
+            "macros": "P:28g C:18g F:10g",
+            "option": "B"
+          },
+          {
+            "name": "Chicken Slices & Rice Cakes",
+            "ingredients": "100g cooked chicken breast, 2 rice cakes, 10g almonds",
+            "kcal": "300 kcal",
+            "macros": "P:35g C:28g F:8g",
+            "option": "C"
+          }
+        ]
+      },
+      {
+        "meal_name": "DINNER",
+        "options": [
+          {
+            "name": "Chicken & Potato",
+            "ingredients": "140g cooked chicken breast, 200g boiled potato, 10g olive oil, 100g mixed vegetables",
+            "kcal": "518 kcal",
+            "macros": "P:48g C:45g F:15g",
+            "option": "A"
+          },
+          {
+            "name": "Tuna & Potato",
+            "ingredients": "180g tuna (canned in water), 150g boiled potato, 15g almonds",
+            "kcal": "500 kcal",
+            "macros": "P:51g C:35g F:18g",
+            "option": "B"
+          },
+          {
+            "name": "Chicken Salad",
+            "ingredients": "150g cooked chicken breast, 100g mixed greens, 10g olive oil, 150g boiled potato",
+            "kcal": "500 kcal",
+            "macros": "P:48g C:35g F:18g",
+            "option": "C"
+          }
+        ]
+      }
+    ],
+    "workout_plan": [
+      {
+        "day_name": "\u26a0\ufe0f API rate limit reached and maximum retries exhausted. Please wait a minute and try again.",
+        "exercises": []
+      }
+    ],
+    "coach_notes": []
+  }
+}

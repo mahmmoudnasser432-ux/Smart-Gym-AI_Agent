@@ -1,0 +1,138 @@
+<div class="container-fluid bg-signup d-flex align-items-center justify-content-center text-white min-vh-100">
+  <div class="row w-100 px-4 content-layer justify-content-center">
+    <div class="col-lg-4 col-md-6 col-sm-8 mb-4">
+
+      <div class="text-center mb-1">
+        <h2 class="fw-bold display-6 ">AI Agent Gym</h2>
+        <p class="fs-6">Your smart AI workout partner in real-time Analyzing your movements and guiding you to train
+          better, safer, and stronger.</p>
+      </div>
+
+      <div class="card border-0 p-4 text-white"
+        style="background: rgba(255,255,255,0.15); backdrop-filter: blur(15px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.3) !important;">
+
+        <div class="text-center mb-4">
+          <h4 class="fw-bold text-white mb-1">AI Agent Gym</h4>
+          <p class="text-white-50 mb-0 small">Create Account</p>
+        </div>
+
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+
+          <!-- Username -->
+          <div class="mb-3">
+            <input type="text" class="form-control border-0 text-white py-3"
+              style="background: rgba(255,255,255,0.1); border-radius: 12px;" placeholder="Enter your username"
+              formControlName="username">
+
+            @if (signupForm.get('username')?.touched && signupForm.get('username')?.invalid) {
+              @if (signupForm.get('username')?.errors?.['required']) {
+                <div class="text-danger small mt-1">Username is required</div>
+              }
+              @if (signupForm.get('username')?.errors?.['minlength']) {
+                <div class="text-danger small mt-1">Username must be at least 3 characters</div>
+              }
+            }
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <input type="email" class="form-control border-0 text-white py-3"
+              style="background: rgba(255,255,255,0.1); border-radius: 12px;" placeholder="Enter your email"
+              formControlName="email">
+
+            @if (signupForm.get('email')?.touched && signupForm.get('email')?.invalid) {
+              @if (signupForm.get('email')?.errors?.['required']) {
+                <div class="text-danger small mt-1">Email is required</div>
+              }
+              @if (signupForm.get('email')?.errors?.['email']) {
+                <div class="text-danger small mt-1">Enter a valid email</div>
+              }
+            }
+          </div>
+
+          <!-- Phone -->
+          <div class="mb-3">
+            <input type="text" class="form-control border-0 text-white py-3"
+              style="background: rgba(255,255,255,0.1); border-radius: 12px;" placeholder="Phone Number (01xxxxxxxxx)"
+              formControlName="phone">
+
+            @if (signupForm.get('phone')?.touched && signupForm.get('phone')?.invalid) {
+              @if (signupForm.get('phone')?.errors?.['required']) {
+                <div class="text-danger small mt-1">Phone is required</div>
+              }
+              @if (signupForm.get('phone')?.errors?.['pattern']) {
+                <div class="text-danger small mt-1">Enter a valid Egyptian phone number</div>
+              }
+            }
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            <div class="input-group">
+              <input [attr.type]="showPassword ? 'text' : 'password'" class="form-control border-0 text-white py-3"
+                style="background: rgba(255,255,255,0.1); border-radius: 12px 0 0 12px;"
+                formControlName="password" placeholder="Password (At least 6 characters)">
+              <span class="input-group-text border-0 text-white-50"
+                style="background: rgba(255,255,255,0.1); border-radius: 0 12px 12px 0; cursor: pointer;"
+                (click)="togglePassword()">
+                <i [class]="showPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"></i>
+              </span>
+            </div>
+
+            @if (signupForm.get('password')?.touched && signupForm.get('password')?.invalid) {
+              @if (signupForm.get('password')?.errors?.['required']) {
+                <div class="text-danger small mt-1">Password is required</div>
+              }
+              @if (signupForm.get('password')?.errors?.['minlength']) {
+                <div class="text-danger small mt-1">Password must be at least 6 characters</div>
+              }
+            }
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="mb-4">
+            <div class="input-group">
+              <input [attr.type]="showRePassword ? 'text' : 'password'" class="form-control border-0 text-white py-3"
+                style="background: rgba(255,255,255,0.1); border-radius: 12px 0 0 12px;"
+                formControlName="rePassword" placeholder="Confirm your password">
+              <span class="input-group-text border-0 text-white-50"
+                style="background: rgba(255,255,255,0.1); border-radius: 0 12px 12px 0; cursor: pointer;"
+                (click)="toggleRePassword()">
+                <i [class]="showRePassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"></i>
+              </span>
+            </div>
+
+            @if (signupForm.get('rePassword')?.touched && signupForm.get('rePassword')?.invalid) {
+              @if (signupForm.get('rePassword')?.errors?.['required']) {
+                <div class="text-danger small mt-1">Please confirm your password</div>
+              }
+              @if (signupForm.get('rePassword')?.errors?.['mismatch']) {
+                <div class="text-danger small mt-1">Passwords do not match</div>
+              }
+            }
+          </div>
+
+          <button type="submit" class="btn w-100 fw-bold py-3 mb-3"
+            style="background: orange; border-radius: 12px; color: #fff;" [disabled]="loading">
+            {{ loading ? 'Creating Account...' : 'Sign Up' }}
+          </button>
+
+          @if (errorMsg) {
+            <div class="text-danger text-center small mb-3">
+              {{ errorMsg }}
+            </div>
+          }
+
+          <div class="text-center mt-2">
+            <span class="text-white-50 small">Already have an account? </span>
+            <a routerLink="/auth/login" class="text-decoration-none small fw-bold" style="color: orange;">
+              Login
+            </a>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

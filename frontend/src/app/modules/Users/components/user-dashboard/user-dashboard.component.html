@@ -1,0 +1,363 @@
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm px-3 py-1"
+  style="background: linear-gradient(to right, #ff8a00 0%, #000000 100%);">
+  <div class="container-fluid">
+
+    <a class="navbar-brand d-flex align-items-center">
+      <img src="/Images/MAinLogoOFTHEWEB.png" alt="logo" style="width: 80px; height: 55px; object-fit: contain; background: none;">
+      <div class="fw-bold ms-2" style="font-size: 1.5rem;">Smart Gym AI</div>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dashNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="dashNav">
+      <ul class="navbar-nav gap-2 align-items-center">
+
+        <li class="nav-item">
+          <a class="nav-link fw-bold active-link" routerLink="/user/dashboard" routerLinkActive="active-link">
+            Home
+          </a>
+        </li>
+
+        @if (hasPlan) {
+        <li class="nav-item">
+          <a class="nav-link text-secondary fw-bold" routerLink="/user/my-plan" routerLinkActive="active-link">
+            My Meal & My Training Plan
+          </a>
+        </li>
+        }
+
+        <li class="nav-item">
+          <a class="nav-link text-secondary fw-bold" routerLink="/user/in-body" routerLinkActive="active-link">
+            InBody-Training Plan
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-secondary fw-bold" routerLink="/user/inbody-history" routerLinkActive="active-link">
+            InBody History
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link text-secondary fw-bold" routerLink="/user/gym-shop" routerLinkActive="active-link">
+            Shop
+          </a>
+        </li>
+
+        <!-- Profile Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link text-secondary fw-bold dropdown-toggle d-flex align-items-center gap-2" href="#"
+            data-bs-toggle="dropdown">
+            <img [src]="profileImageUrl" alt="avatar"
+              onerror="this.src='https://ui-avatars.com/api/?name=User&background=ff8a00&color=fff&size=32'"
+              style="width:32px; height:32px; border-radius:50%; object-fit:cover; border:2px solid #ff8a00;">
+            {{ userName || 'Profile' }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2">
+            <li>
+              <a class="dropdown-item py-2" style="cursor:pointer;" (click)="showProfileModal = true">
+                👤 My Profile
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item py-2" routerLink="/user/add-tokens">🪙 Add Tokens</a>
+            </li>
+            <li>
+              <a class="dropdown-item py-2" routerLink="/user/booking-machine">📅 Booking Tools</a>
+            </li>
+            <li>
+              <a class="dropdown-item py-2" routerLink="/user/rate-coach">⭐ Rate Coach</a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item py-2 text-danger" style="cursor:pointer;" (click)="authService.logout()">
+                🚪 Logout
+              </a>
+            </li>
+          </ul>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="container py-4">
+
+  <section class="mb-4">
+    <h2 class="fw-bold">Welcome, {{ userName }} 👋</h2>
+    <p class="text-secondary">Let's crush today's workout</p>
+  </section>
+
+  <!-- STATS -->
+  <section class="row g-4 mb-4">
+    <div class="col-lg-4">
+      <div class="card gym-status-card border-0 shadow-sm rounded-4 p-4 h-100">
+        <span class="label-orange">GYM STATUS</span>
+        <h4 class="fw-bold text-success mt-2">Open Now</h4>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card token-card border-0 shadow-sm rounded-4 p-4 h-100">
+        <span class="label-orange">TOKEN LEFT</span>
+        <h4 class="fw-bold mt-2">{{ userTokens }}</h4>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-4 p-4 h-100"
+        style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&q=80') center/cover; cursor: pointer;"
+        routerLink="/user/gym-shop">
+        <span class="label-orange">GYM SHOP</span>
+        <h4 class="fw-bold text-white mt-2">Visit Store →</h4>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI + COACH + INBOX -->
+  <section class="row g-4 mb-4">
+
+    <div class="col-lg-4">
+      <div class="card border-0 rounded-4 p-4 h-100 ai-coach-card text-white">
+        <h5 class="fw-bold">🤖 Ask AI Coach</h5>
+        <p style="color:#e0e0e0;">Instant workout tips and quick exercise guidance</p>
+        <button class="btn fw-semibold px-4 mt-auto w-100" style="background:#ff8a00; color:#fff;"
+          (click)="openAIChat()">
+          Start AI Chat →
+        </button>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-4 p-4 h-100 ai-coach-card text-white">
+        <h5 class="fw-bold text-white">🏋️ Your Coach</h5>
+        <p class="text-secondary" style="color:#e0e0e0 !important;">Message your coach for personalized guidance.</p>
+        <div class="d-flex gap-3 mt-auto">
+          <button class="btn fw-semibold px-4 w-100" style="background:#ff8a00; color:#fff;"
+            (click)="openCoachChat()">Message Coach</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-4 p-4 h-100 ai-coach-card text-white">
+        <h5 class="fw-bold text-white d-flex align-items-center justify-content-between">
+          <span>📬 Admin Inbox</span>
+          @if (unreadInboxCount > 0) {
+          <span class="badge rounded-pill bg-warning text-dark fs-6">{{ unreadInboxCount }}</span>
+          }
+        </h5>
+        <p class="text-secondary" style="color:#e0e0e0 !important;">Chat directly with the gym support team and admin.
+        </p>
+        <button class="btn fw-semibold px-4 mt-auto w-100" style="background:#ff8a00; color:#fff;"
+          (click)="openInbox()">
+          Open Inbox →
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- COACH CHAT MODAL -->
+@if (showCoachChat) {
+<div class="chat-overlay" (click)="showCoachChat = false"></div>
+<div class="chat-modal">
+  <div class="chat-header">
+    <div class="d-flex align-items-center gap-2">
+      🏋️ <span class="fw-bold">Chat with Coach</span>
+    </div>
+    <button class="btn-close-chat" (click)="showCoachChat = false">✕</button>
+  </div>
+
+  <div class="chat-messages" #chatMessages>
+    @if (historyLoading) {
+    <div class="chat-welcome">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <p class="mt-2" style="color:#888;">Loading chat history...</p>
+    </div>
+    }
+    @if (messages.length === 0 && !historyLoading) {
+    <div class="chat-welcome">
+      <p>🏋️ Send a message to your coach!</p>
+      <small style="color:#888;">Your assigned coach will reply soon</small>
+    </div>
+    }
+    @for (msg of messages; track $index) {
+    <div class="chat-bubble" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'coach'">
+      {{ msg.content }}
+    </div>
+    }
+    @if (isLoading) {
+    <div class="chat-bubble assistant">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+    </div>
+    }
+  </div>
+
+  <div class="chat-input-area">
+    <input class="chat-input" placeholder="Type your message..." [(ngModel)]="userMessage"
+      (keydown)="onCoachChatEnter($event)" [disabled]="isLoading" />
+    <button class="chat-send-btn" (click)="sendCoachMessage()" [disabled]="isLoading || !userMessage.trim()">➤</button>
+  </div>
+</div>
+}
+
+<!-- AI CHAT MODAL -->
+@if (showAIChat) {
+<div class="chat-overlay" (click)="showAIChat = false"></div>
+<div class="chat-modal">
+  <div class="chat-header">
+    <div class="d-flex align-items-center gap-2">
+      🤖 <span class="fw-bold">AI Coach</span>
+    </div>
+    <button class="btn-close-chat" (click)="showAIChat = false">✕</button>
+  </div>
+
+  <div class="chat-messages" #chatMessages>
+    @if (historyLoading) {
+    <div class="chat-welcome">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <p class="mt-2" style="color:#888;">Loading AI chat history...</p>
+    </div>
+    }
+    @for (msg of aiMessages; track $index) {
+    <div class="chat-bubble" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
+      {{ msg.content }}
+    </div>
+    }
+    @if (aiLoading) {
+    <div class="chat-bubble assistant">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+    </div>
+    }
+  </div>
+
+  <div class="chat-input-area">
+    <input class="chat-input" placeholder="Ask the AI Coach..." [(ngModel)]="aiMessage"
+      (keydown)="onAIChatEnter($event)" [disabled]="aiLoading" />
+    <button class="chat-send-btn" (click)="sendAIMessage()" [disabled]="aiLoading || !aiMessage.trim()">➤</button>
+  </div>
+</div>
+}
+
+<!-- INBOX CHAT MODAL -->
+@if (showInboxChat) {
+<div class="chat-overlay" (click)="showInboxChat = false"></div>
+<div class="chat-modal">
+  <div class="chat-header" style="background: linear-gradient(135deg, #1c1c1c, #2c2212, #ff8a00);">
+    <div class="d-flex align-items-center gap-2">
+      📬 <span class="fw-bold">Inbox with Admin</span>
+    </div>
+    <button class="btn-close-chat" (click)="showInboxChat = false">✕</button>
+  </div>
+
+  <div class="chat-messages" #chatMessages>
+    @if (inboxLoading && inboxMessages.length === 0) {
+    <div class="chat-welcome">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <p class="mt-2" style="color:#888;">Loading messages...</p>
+    </div>
+    }
+    @if (inboxMessages.length === 0 && !inboxLoading) {
+    <div class="chat-welcome">
+      <p>📬 No messages in your inbox yet.</p>
+      <small style="color:#888;">Feel free to send a message to support/admin.</small>
+    </div>
+    }
+    @for (msg of inboxMessages; track $index) {
+    <div class="chat-bubble" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'coach'">
+      {{ msg.content }}
+    </div>
+    }
+    @if (inboxLoading && inboxMessages.length > 0) {
+    <div class="chat-bubble assistant">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+    </div>
+    }
+  </div>
+
+  <div class="chat-input-area">
+    <input class="chat-input" placeholder="Type support message..." [(ngModel)]="inboxMessageInput"
+      (keydown)="onInboxEnter($event)" [disabled]="inboxLoading" />
+    <button class="chat-send-btn" (click)="sendInboxReply()"
+      [disabled]="inboxLoading || !inboxMessageInput.trim()">➤</button>
+  </div>
+</div>
+}
+
+<!-- PROFILE MODAL -->
+@if (showProfileModal) {
+<div class="profile-overlay" (click)="showProfileModal = false">
+  <div class="profile-modal" (click)="$event.stopPropagation()">
+    <div class="profile-header">
+      <h3 class="fw-bold">My Profile</h3>
+      <button class="btn-close" (click)="showProfileModal = false">✕</button>
+    </div>
+
+    <div class="profile-body">
+      <!-- Avatar Section -->
+      <div class="avatar-section text-center mb-4 position-relative">
+        <!-- ✅ عرض الصورة مع خيار التعديل فقط للـ customers -->
+        @if (canChangeProfilePicture) {
+        <label for="profileImageInput" style="cursor: pointer; position: relative; display: inline-block;">
+          <img [src]="profileImageUrl" alt="Profile" class="profile-avatar mb-3"
+            onerror="this.src='https://ui-avatars.com/api/?name=User&background=ff8a00&color=fff&size=100'"
+            style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #ff8a00;">
+          <div class="edit-badge"
+            style="position: absolute; bottom: 15px; right: 0; background: #ff8a00; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; font-size: 14px;">
+            📷
+          </div>
+        </label>
+        <input type="file" id="profileImageInput" class="d-none" accept="image/*" (change)="onImageChange($event)"
+          style="display: none;">
+        } @else {
+        <!-- ✅ عرض الصورة بدون خيار التعديل للـ admin و coach -->
+        <img [src]="profileImageUrl" alt="Profile" class="profile-avatar mb-3"
+          onerror="this.src='https://ui-avatars.com/api/?name=User&background=ff8a00&color=fff&size=100'"
+          style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #ff8a00;">
+        }
+      </div>
+
+      <!-- Profile Edit Form -->
+      <div class="profile-section mb-4">
+        <h6 class="fw-bold text-warning mb-3">Edit Information</h6>
+
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-bold">Name</label>
+          <input type="text" class="form-control rounded-3" [(ngModel)]="userName" placeholder="Your Name">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-bold">Phone</label>
+          <input type="text" class="form-control rounded-3" [(ngModel)]="userPhone" placeholder="Your Phone Number">
+        </div>
+
+        <button class="btn w-100 fw-bold rounded-3" style="background: #ff8a00; color: #fff;"
+          (click)="onUpdateProfile()">
+          Save Changes
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+}

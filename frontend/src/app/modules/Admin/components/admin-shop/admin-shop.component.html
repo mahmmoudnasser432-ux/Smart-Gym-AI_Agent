@@ -1,0 +1,305 @@
+<div class="shop-container">
+
+  <!-- Success Toast -->
+  @if (successMessage) {
+  <div class="success-toast">✅ {{ successMessage }}</div>
+  }
+
+  <!-- Header Section -->
+  <header class="shop-header">
+    <div class="header-content">
+      <div class="title-group">
+        <a class="back-link" routerLink="/admin/dashboard">‹ Back to Dashboard</a>
+        <h1 class="page-title">Shop Management</h1>
+        <p class="page-subtitle">Manage Products, Stock & Pricing</p>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn-add-product" (click)="openAdd()">
+          ➕ Add Product
+        </button>
+        <div class="header-stats">
+          <div class="h-stat">
+            <span class="h-stat-value">{{ products.length }}</span>
+            <span class="h-stat-label">Products</span>
+          </div>
+          <div class="h-stat">
+            <span class="h-stat-value h-stat-danger">{{ getLowStockCount() }}</span>
+            <span class="h-stat-label">Low Stock</span>
+          </div>
+        </div>
+        @if (activeView === 'products') {
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text"
+                 [(ngModel)]="searchQuery"
+                 (input)="filterProducts()"
+                 placeholder="Search products...">
+        </div>
+        }
+      </div>
+    </div>
+  </header>
+
+  <!-- Categories Section -->
+  @if (activeView === 'products') {
+  <div class="categories-bar">
+    @for (cat of categories; track cat) {
+    <button [class.active]="selectedCategory === cat"
+            (click)="selectedCategory = cat; filterProducts()">
+      {{ cat }}
+    </button>
+    }
+  </div>
+  }
+
+  <!-- View Tabs -->
+  <div class="view-tab-bar">
+    <button [class.active]="activeView === 'products'" (click)="switchView('products')">Products</button>
+    <button [class.active]="activeView === 'low-stock'" (click)="switchView('low-stock')">Low Stock</button>
+    <button [class.active]="activeView === 'inventory-history'" (click)="switchView('inventory-history')">Inventory History</button>
+  </div>
+
+  @if (activeView === 'products') {
+  <main class="products-grid">
+    @for (product of filteredProducts; track product.id) {
+    <div class="product-card">
+      <div class="product-img-wrap" style="background: #000;">
+        <img [src]="product.image" [alt]="product.name" (error)="onImgError($event, product.name)">
+        <div class="category-tag">{{ product.category }}</div>
+        <div class="stock-badge" [class]="'stock-' + getStockStatus(product)">
+          {{ getStockLabel(product) }} · {{ product.stock }}
+        </div>
+      </div>
+
+      <div class="product-info">
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="product-desc">{{ product.description }}</p>
+
+        <div class="product-footer">
+          <span class="product-price">{{ product.price | currency:'EGP ':'symbol':'1.0-0' }}</span>
+          <div class="admin-actions">
+            <button class="btn-edit" (click)="openEdit(product, $event)" title="Edit Product">
+              ✏️
+            </button>
+            <button class="btn-delete" (click)="confirmDelete(product, $event)" title="Delete Product">
+              🗑️
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </main>
+
+  <!-- Empty State -->
+  @if (filteredProducts.length === 0) {
+  <div class="empty-state">
+    <div class="empty-icon">🛒</div>
+    <h2>No products found</h2>
+    <p>Try searching for something else or change the category.</p>
+  </div>
+  }
+  }
+
+  @if (activeView === 'low-stock') {
+  <section class="low-stock-section">
+    <h2>Low Stock Products</h2>
+    @if (lowStockProducts.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h2>No low stock items</h2>
+      <p>All products currently have healthy stock levels.</p>
+    </div>
+    } @else {
+    <div class="low-stock-grid">
+      @for (product of lowStockProducts; track product.id) {
+      <div class="product-card low-stock-card">
+        <div class="product-img-wrap" style="background: #000;">
+          <img [src]="product.image" [alt]="product.name" (error)="onImgError($event, product.name)">
+          <div class="category-tag">{{ product.category }}</div>
+          <div class="stock-badge stock-low">
+            {{ product.stock_status || 'LOW_STOCK' }} · {{ product.stock }}
+          </div>
+        </div>
+
+        <div class="product-info">
+          <h3 class="product-name">{{ product.name }}</h3>
+          <p class="product-desc">{{ product.description }}</p>
+          <div class="product-footer">
+            <span class="product-price">{{ product.price | currency:'EGP ':'symbol':'1.0-0' }}</span>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </section>
+  }
+
+  @if (activeView === 'inventory-history') {
+  <section class="inventory-history-section">
+    <h2>Inventory History</h2>
+    @if (inventoryHistory.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">📊</div>
+      <h2>No inventory history yet</h2>
+      <p>Orders will appear here once purchases are recorded.</p>
+    </div>
+    } @else {
+    <div class="history-list">
+      @for (order of inventoryHistory; track order.orderId) {
+      <div class="history-card">
+        <div class="history-header">
+          <div>
+            <h3>Order #{{ order.orderId }}</h3>
+            <p>{{ order.customerName }} • {{ order.orderTime | date:'short' }}</p>
+          </div>
+          <div class="history-total">{{ order.totalPrice | currency:'EGP ':'symbol':'1.0-0' }}</div>
+        </div>
+        <div class="history-items">
+          @for (item of order.items; track item.id) {
+          <div class="history-item">
+            <img [src]="item.image" [alt]="item.name" (error)="onImgError($event, item.name)">
+            <div>
+              <strong>{{ item.name }}</strong>
+              <p>{{ item.quantity }} × {{ item.price | currency:'EGP ':'symbol':'1.0-0' }}</p>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </section>
+  }
+</div>
+
+<!-- EDIT MODAL -->
+@if (showEditModal && editProduct) {
+<div class="modal-overlay" (click)="cancelEdit()"></div>
+<div class="edit-modal">
+  <div class="edit-modal-header">
+    <h3>✏️ Edit Product</h3>
+    <button class="modal-close" (click)="cancelEdit()">✕</button>
+  </div>
+
+  <div class="edit-modal-body">
+    <div class="edit-preview text-center mb-3">
+      <img [src]="imagePreview || editProduct.image" [alt]="editProduct.name" style="max-height: 150px; border-radius: 8px; object-fit: cover;">
+    </div>
+    
+    <div class="form-group">
+      <label>Change Image</label>
+      <input type="file" accept="image/*" class="form-input" (change)="onFileSelected($event)">
+    </div>
+
+    <div class="form-group">
+      <label>Product Name</label>
+      <input type="text" [(ngModel)]="editForm.name" class="form-input">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Price (EGP)</label>
+        <input type="number" [(ngModel)]="editForm.price" class="form-input">
+      </div>
+      <div class="form-group">
+        <label>Stock Quantity</label>
+        <input type="number" [(ngModel)]="editForm.stock" class="form-input">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Category</label>
+      <select [(ngModel)]="editForm.category" class="form-input">
+        <option value="Gear">Gear</option>
+        <option value="Supplements">Supplements</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea [(ngModel)]="editForm.description" class="form-input form-textarea" rows="3"></textarea>
+    </div>
+  </div>
+
+  <div class="edit-modal-footer">
+    <button class="btn-modal-cancel" (click)="cancelEdit()">Cancel</button>
+    <button class="btn-modal-save" (click)="saveEdit()">Save Changes</button>
+  </div>
+</div>
+}
+
+<!-- DELETE CONFIRMATION MODAL -->
+@if (showDeleteConfirm && productToDelete) {
+<div class="modal-overlay" (click)="cancelDelete()"></div>
+<div class="delete-modal">
+  <div class="delete-modal-icon">⚠️</div>
+  <h3 class="delete-modal-title">Delete Product?</h3>
+  <p class="delete-modal-desc">
+    Are you sure you want to delete <strong>{{ productToDelete.name }}</strong>?
+    This action cannot be undone.
+  </p>
+  <div class="delete-modal-actions">
+    <button class="btn-cancel" (click)="cancelDelete()">Cancel</button>
+    <button class="btn-confirm-delete" (click)="deleteProduct()">Delete</button>
+  </div>
+</div>
+}
+
+<!-- ADD MODAL -->
+@if (showAddModal) {
+<div class="modal-overlay" (click)="cancelAdd()"></div>
+<div class="edit-modal">
+  <div class="edit-modal-header">
+    <h3>➕ Add New Product</h3>
+    <button class="modal-close" (click)="cancelAdd()">✕</button>
+  </div>
+
+  <div class="edit-modal-body">
+    <div class="form-group">
+      <label>Product Name</label>
+      <input type="text" [(ngModel)]="addForm.name" class="form-input" placeholder="e.g. Whey Protein">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Price (EGP)</label>
+        <input type="number" [(ngModel)]="addForm.price" class="form-input" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>Stock Quantity</label>
+        <input type="number" [(ngModel)]="addForm.stock" class="form-input" placeholder="0">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Category</label>
+      <select [(ngModel)]="addForm.category" class="form-input">
+        <option value="Gear">Gear</option>
+        <option value="Supplements">Supplements</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Product Image</label>
+      <input type="file" accept="image/*" class="form-input" (change)="onFileSelected($event)">
+      <div *ngIf="imagePreview" class="mt-2">
+        <img [src]="imagePreview" alt="Preview" style="max-height: 100px; border-radius: 8px; object-fit: cover;">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea [(ngModel)]="addForm.description" class="form-input form-textarea" rows="3" placeholder="Enter product description..."></textarea>
+    </div>
+  </div>
+
+  <div class="edit-modal-footer">
+    <button class="btn-modal-cancel" (click)="cancelAdd()">Cancel</button>
+    <button class="btn-modal-save" (click)="saveAdd()">Add Product</button>
+  </div>
+</div>
+}

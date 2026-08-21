@@ -1,0 +1,27 @@
+<!-- TOP HEADER -->
+<nav class="top-bar">
+  <div class="top-bar-left">
+    <button class="back-btn" routerLink="/admin/dashboard">
+      <span class="back-icon">‹</span>
+    </button>
+    <h2 class="page-title">Token Analytics</h2>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="analytics-main">
+  <div class="list-container">
+    @for (machine of machineUsage; track machine.name; let i = $index) {
+    <div class="machine-card">
+      <div class="machine-name">
+        <span class="machine-rank">{{ i + 1 }}.</span>
+        {{ machine.name }}
+      </div>
+      <div class="machine-tokens">
+        <span class="token-icon">🪙</span>
+        {{ machine.tokens }}
+      </div>
+    </div>
+    }
+  </div>
+</main>

@@ -1,0 +1,248 @@
+<!-- TOP BAR -->
+<nav class="top-bar">
+  <div class="top-bar-left">
+    <button class="back-btn" routerLink="/admin/dashboard">
+      <span class="back-icon">‹</span> Back to Dashboard
+    </button>
+  </div>
+  <div class="top-bar-right">
+    <span class="admin-name">{{ userName }}</span>
+  </div>
+</nav>
+
+<!-- SUCCESS TOAST -->
+@if (deleteSuccess) {
+<div class="success-toast">
+  ✅ Customer deleted successfully
+</div>
+}
+
+<!-- MAIN -->
+<main class="manage-main">
+
+  @if (!selectedCustomer) {
+  <!-- LIST VIEW -->
+  <section class="page-header">
+    <div>
+      <h2 class="page-title">👥 Manage Customers</h2>
+      <p class="page-desc">View customer details, monitor activity & manage accounts.</p>
+    </div>
+    <div class="header-stats">
+      <div class="header-stat">
+        <span class="hs-value">{{ customers.length }}</span>
+        <span class="hs-label">Total</span>
+      </div>
+      <div class="header-stat">
+        <span class="hs-value hs-danger">{{ getAbsentUsers() }}</span>
+        <span class="hs-label">Absent</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEARCH -->
+  <section class="search-section">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" placeholder="Search by name or email..."
+        [(ngModel)]="searchQuery">
+    </div>
+  </section>
+
+  <!-- USERS GRID -->
+  <section class="users-grid">
+    @for (customer of filteredCustomers; track customer.id) {
+    <div class="user-card" (click)="selectCustomer(customer)">
+      <div class="user-card-top">
+        <div class="user-info-row">
+          <div class="avatar-circle">{{ customer.name.charAt(0) }}</div>
+          <div class="user-basic-info">
+            <h5 class="user-name">{{ customer.name }}</h5>
+            <span class="user-email">{{ customer.email }}</span>
+          </div>
+        </div>
+        <button class="delete-btn-small" (click)="confirmDelete(customer, $event)" title="Delete Customer">
+          🗑️
+        </button>
+      </div>
+
+      <div class="user-card-body">
+        <div class="user-meta">
+          <span class="meta-item">
+            <span class="meta-icon">📱</span> {{ customer.phone }}
+          </span>
+          <span class="meta-item">
+            <span class="meta-icon">🏷️</span> {{ customer.membershipType }}
+          </span>
+        </div>
+
+        <div class="last-visit-bar" [class]="'level-' + getAbsenceLevel(customer)">
+          <span class="lv-label">Last Visit:</span>
+          <span class="lv-days">{{ getDaysSinceLastVisit(customer) }} days ago</span>
+        </div>
+      </div>
+
+      @if (getAbsenceAlert(customer)) {
+      <div class="absence-alert">
+        {{ getAbsenceAlert(customer) }}
+      </div>
+      }
+    </div>
+    }
+
+    @if (filteredCustomers.length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">🔍</span>
+      <h5>No customers found</h5>
+      <p>Try a different search term.</p>
+    </div>
+    }
+  </section>
+
+  } @else {
+  <!-- DETAIL VIEW -->
+  <div class="detail-header">
+    <button class="back-link" (click)="backToList()">
+      <span>‹</span> Back to list
+    </button>
+    <button class="delete-btn-detail" (click)="confirmDelete(selectedCustomer, $event)">
+      🗑️ Delete Customer
+    </button>
+  </div>
+
+  <div class="detail-grid">
+    <!-- LEFT: Profile & Attendance -->
+    <div class="detail-left">
+      <div class="profile-card">
+        <div class="avatar-circle-large">{{ selectedCustomer.name.charAt(0) }}</div>
+        <h3 class="profile-name">{{ selectedCustomer.name }}</h3>
+        <p class="profile-email">{{ selectedCustomer.email }}</p>
+        <p class="profile-phone">{{ selectedCustomer.phone }}</p>
+        <span class="membership-tag">{{ selectedCustomer.membershipType }}</span>
+
+        <div class="profile-details">
+          <div class="pd-row">
+            <span class="pd-label">Join Date</span>
+            <span class="pd-value">{{ selectedCustomer.joinDate }}</span>
+          </div>
+          <div class="pd-row">
+            <span class="pd-label">Last Visit</span>
+            <span class="pd-value">{{ selectedCustomer.lastVisit }}</span>
+          </div>
+          <div class="pd-row">
+            <span class="pd-label">Visit Time</span>
+            <span class="pd-value">{{ selectedCustomer.lastVisitTime }}</span>
+          </div>
+          <div class="pd-row">
+            <span class="pd-label">Days Absent</span>
+            <span class="pd-value" [class]="'absence-' + getAbsenceLevel(selectedCustomer)">
+              {{ getDaysSinceLastVisit(selectedCustomer) }} days
+            </span>
+          </div>
+        </div>
+      </div>
+
+      @if (getAbsenceAlert(selectedCustomer)) {
+      <div class="alert-card-detail">
+        <h5>⚠️ Attendance Alert</h5>
+        <p>{{ getAbsenceAlert(selectedCustomer) }}</p>
+        <button class="reminder-btn" (click)="sendReminder(selectedCustomer.id)">Send Reminder Message</button>
+      </div>
+      } @else {
+      <div class="success-card-detail">
+        <h5>✅ Attendance Good</h5>
+        <p>This user is attending regularly.</p>
+      </div>
+      }
+
+      <!-- Recent Attendance List -->
+      <div class="card mt-3 p-3 bg-dark text-white border-light shadow-sm" style="border-radius: 12px;">
+        <h5 class="fw-bold mb-3">📅 Recent Attendance</h5>
+        @if (selectedCustomerAttendance.length === 0) {
+          <p class="text-secondary small mb-0">No attendance logs found.</p>
+        } @else {
+          <div class="d-flex flex-column gap-2" style="max-height: 200px; overflow-y: auto;">
+            @for (log of selectedCustomerAttendance; track log.booking_id) {
+              <div class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-2">
+                <div>
+                  <span class="fw-bold text-warning small">{{ log.start_time | date:'EEE d MMM' }}</span>
+                  <div class="text-secondary" style="font-size: 11px;">
+                    {{ log.start_time | date:'h:mm a' }} - {{ log.end_time | date:'h:mm a' }}
+                  </div>
+                </div>
+                <span class="badge bg-success text-white small" style="padding: 4px 8px;">{{ log.status }}</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- RIGHT: Progress -->
+    <div class="detail-right">
+      <div class="progress-card">
+        <h4 class="section-title">📊 Progress Report</h4>
+
+        <div class="stat-boxes">
+          <div class="stat-box">
+            <span class="sb-icon">⚖️</span>
+            <div class="sb-info">
+              <span class="sb-label">Current Weight</span>
+              <span class="sb-value">{{ selectedCustomer.weight }} kg</span>
+            </div>
+          </div>
+          <div class="stat-box">
+            <span class="sb-icon">💪</span>
+            <div class="sb-info">
+              <span class="sb-label">Muscle Mass</span>
+              <span class="sb-value">{{ selectedCustomer.muscleMass }} kg</span>
+            </div>
+          </div>
+          <div class="stat-box">
+            <span class="sb-icon">🔥</span>
+            <div class="sb-info">
+              <span class="sb-label">Body Fat</span>
+              <span class="sb-value">{{ selectedCustomer.bodyFat }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-section">
+          <h5 class="goal-title">Target Goal Progress</h5>
+          <div class="goal-bar-wrapper">
+            <div class="goal-bar-header">
+              <span>Progress to Target ({{ selectedCustomer.targetWeight }} kg)</span>
+              <span class="goal-percent">{{ getProgressPercent(selectedCustomer) }}%</span>
+            </div>
+            <div class="goal-bar-track">
+              <div class="goal-bar-fill" [style.width.%]="getProgressPercent(selectedCustomer)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+</main>
+
+<!-- DELETE CONFIRMATION MODAL -->
+@if (showDeleteConfirm && customerToDelete) {
+<div class="modal-overlay" (click)="cancelDelete()"></div>
+<div class="delete-modal">
+  <div class="delete-modal-icon">⚠️</div>
+  <h3 class="delete-modal-title">Delete Customer?</h3>
+  <p class="delete-modal-desc">
+    Are you sure you want to delete <strong>{{ customerToDelete.name }}</strong>?
+    This action cannot be undone.
+  </p>
+  <div class="delete-modal-info">
+    <span>📧 {{ customerToDelete.email }}</span>
+    <span>📱 {{ customerToDelete.phone }}</span>
+    <span>📅 Last Visit: {{ getDaysSinceLastVisit(customerToDelete) }} days ago</span>
+  </div>
+  <div class="delete-modal-actions">
+    <button class="btn-cancel" (click)="cancelDelete()">Cancel</button>
+    <button class="btn-confirm-delete" (click)="deleteCustomer()">Delete</button>
+  </div>
+</div>
+}

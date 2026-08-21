@@ -1,0 +1,76 @@
+<div class="container-fluid bg-login d-flex align-items-center justify-content-center text-white min-vh-100">
+  <div class="row w-100 px-4 content-layer justify-content-center">
+    <div class="col-lg-4 col-md-6 col-sm-8 mb-4">
+
+      <div class="text-center mb-1">
+        <h2 class="fw-bold display-6 ">AI Agent Gym</h2>
+        <p class="fs-6">Your smart AI workout partner in real-time Analyzing your movements and guiding you to train
+          better, safer, and stronger.</p>
+      </div>
+
+      <div class="card border-0 p-4 text-white"
+        style="background: rgba(255,255,255,0.15); backdrop-filter: blur(15px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.3) !important;">
+
+        <div class="text-center mb-4">
+          <h4 class="fw-bold text-white mb-1">AI Agent</h4>
+          <p class="text-white-50 mb-0 small">Welcome Back</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+          <div class="mb-3">
+            <input type="email" class="form-control border-0 text-white py-3"
+              style="background: rgba(255,255,255,0.1); border-radius: 12px;" placeholder="Enter your email"
+              formControlName="email">
+            @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+            @if (loginForm.get('email')?.errors?.['required']) {
+            <div class="text-danger small mt-1">Email is required</div>
+            }
+            }
+          </div>
+
+          <div class="mb-4">
+            <div class="input-group">
+              <input [attr.type]="showPassword ? 'text' : 'password'" class="form-control border-0 text-white py-3"
+                style="background: rgba(255,255,255,0.1); border-radius: 12px 0 0 12px;"
+                placeholder="Enter your password" formControlName="password">
+              <span class="input-group-text border-0 text-white-50"
+                style="background: rgba(255,255,255,0.1); border-radius: 0 12px 12px 0; cursor: pointer;"
+                (click)="togglePassword()">
+                <i [class]="showPassword ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'"></i>
+              </span>
+            </div>
+            @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+            <div class="text-danger small mt-1">Password is required</div>
+            }
+          </div>
+
+          <button type="submit" class="btn w-100 fw-bold py-3 mb-3"
+            style="background: orange; border-radius: 12px; color: #fff;" [disabled]="loading">
+            {{ loading ? 'Logging in...' : 'Login' }}
+          </button>
+
+          @if (errorMsg) {
+          <div class="text-danger text-center small">{{ errorMsg }}</div>
+          }
+
+          <div class="text-center mt-2">
+            <a routerLink="/auth/forgot-password" class="text-white-50 text-decoration-none small">
+              Forgot my password
+            </a>
+          </div>
+
+          <!-- ✅ السطر الجديد اللي اتضاف -->
+          <div class="text-center mt-3">
+            <span class="text-white-50 small">Don't have an account? </span>
+            <a routerLink="/auth/signup" class="text-decoration-none small fw-bold" style="color: orange;">
+              Sign Up
+            </a>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

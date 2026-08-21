@@ -1,0 +1,74 @@
+<!-- BG Layer -->
+<div class="bg-layer"></div>
+<div class="bg-overlay"></div>
+
+<!-- Loading State -->
+<div *ngIf="loading && !inBodyData" class="loading-screen">
+  <div class="loading-spinner"></div>
+  <p>Loading InBody History...</p>
+</div>
+
+<!-- Main Content -->
+<div *ngIf="!loading" class="page-content">
+
+  <section class="section">
+    <div class="section-header-row">
+      <div class="header-left">
+        <a routerLink="/user/in-body" class="btn-back">
+          ← Back to InBody Plan
+        </a>
+        <h2 class="section-heading">📜 InBody Scans History</h2>
+      </div>
+
+      <!-- Scan History Dropdown (Only shows old scans) -->
+      <div class="scan-history-selector" *ngIf="oldScans.length > 0">
+        <label for="scanSelect">Select Scan: </label>
+        <select id="scanSelect" class="scan-select" [(ngModel)]="selectedScanId" (change)="onScanChange()">
+          <option *ngFor="let scan of oldScans; let i = index" [value]="scan?.scanId ?? scan?.scan_id ?? scan?.id">
+            Scan {{ scansHistory.length - (i + 1) }} ({{ (scan?.scan_date ?? scan?.created_at ?? scan?.date) |
+            date:'yyyy-MM-dd HH:mm' }})
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Empty State if no old scans exist -->
+    <div class="empty-state" *ngIf="oldScans.length === 0">
+      <div class="empty-icon">📂</div>
+      <h2>No Previous History</h2>
+      <p>Only old scans are listed here. You do not have any previous InBody scans in your history.</p>
+    </div>
+
+    <div *ngIf="oldScans.length > 0 && inBodyData">
+      <!-- Scan Date -->
+      <p class="section-meta">
+        📅 Scan date: {{ inBodyData.scanDate || 'Not available' }}
+      </p>
+
+      <!-- All Scan Cards Grid -->
+      <div class="cards-grid" *ngIf="allScanCards.length > 0">
+        <div class="metric-card" *ngFor="let card of allScanCards">
+          <span class="metric-label">{{ card.label }}</span>
+          <span class="metric-value">
+            {{ card.value }}
+            <span class="metric-unit" *ngIf="card.unit">{{ card.unit }}</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- AI Goal Card -->
+      <div class="ai-goal-card" *ngIf="inBodyData.aiGoal">
+        <span class="ai-goal-label">🎯 AI GOAL</span>
+        <span class="ai-goal-value">{{ inBodyData.aiGoal }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Go to Dashboard Action -->
+  <div class="actions-area">
+    <a routerLink="/user/dashboard" class="btn-dashboard">
+      🏠 Go to Dashboard
+    </a>
+  </div>
+
+</div>

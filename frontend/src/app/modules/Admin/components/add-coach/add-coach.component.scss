@@ -1,0 +1,362 @@
+// ===== THEME VARIABLES (ADMIN) =====
+$admin-bg: #121212;
+$admin-surface: #1e1e1e;
+$admin-accent: #ff8a00;
+$admin-accent-hover: #e07a00;
+$admin-accent-dim: rgba(255, 138, 0, 0.15);
+$admin-border: rgba(255, 255, 255, 0.08);
+$admin-text: #ffffff;
+$admin-text-muted: #a0a0a0;
+$admin-danger: #ef4444;
+$admin-success: #22c55e;
+
+@mixin glass {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid $admin-border;
+  border-radius: 16px;
+}
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url('/Images/123-photo.jpg') center/cover no-repeat fixed;
+  color: $admin-text;
+  font-family: 'Outfit', sans-serif;
+}
+
+.add-coach-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  margin-left: 260px;
+
+  @media (max-width: 1024px) {
+    margin-left: 0;
+    padding: 20px;
+  }
+}
+
+// ===== PAGE HEADER =====
+.page-header {
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.back-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid $admin-border;
+  background: rgba(255, 138, 0, 0.1);
+  color: $admin-accent;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background: rgba(255, 138, 0, 0.2);
+    border-color: rgba(255, 138, 0, 0.3);
+    transform: translateX(-2px);
+  }
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 900;
+  margin: 0;
+  color: $admin-text;
+  letter-spacing: 0.5px;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: $admin-text-muted;
+  margin: 4px 0 0;
+}
+
+// ===== FORM CONTAINER =====
+.form-container {
+  @include glass;
+  padding: 40px;
+  margin-top: 30px;
+
+  @media (max-width: 768px) {
+    padding: 24px;
+  }
+}
+
+.coach-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+// ===== UPLOAD SECTION =====
+.upload-section {
+  text-align: center;
+}
+
+.upload-box {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.preview-area {
+  width: 100%;
+  min-height: 200px;
+  border: 2px solid $admin-accent;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(255, 138, 0, 0.08);
+  overflow: hidden;
+
+  &:hover {
+    border-color: $admin-accent;
+    background: rgba(255, 138, 0, 0.12);
+  }
+
+  &.has-image {
+    border: none;
+    min-height: 250px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+  }
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+
+  i {
+    font-size: 48px;
+    color: $admin-accent;
+    opacity: 0.8;
+  }
+
+  p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: $admin-text;
+  }
+}
+
+.hint {
+  font-size: 12px;
+  color: $admin-text-muted;
+  display: block;
+}
+
+.remove-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: $admin-danger;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+// ===== FORM FIELDS =====
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: $admin-text;
+  text-align: right;
+}
+
+.form-control {
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $admin-border;
+  border-radius: 12px;
+  color: $admin-text;
+  font-size: 14px;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: rgba(255, 138, 0, 0.5);
+    background: rgba(255, 138, 0, 0.05);
+    box-shadow: 0 0 12px rgba(255, 138, 0, 0.1);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.form-hint {
+  font-size: 12px;
+  color: $admin-text-muted;
+  display: block;
+}
+
+// ===== FORM ACTIONS =====
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Outfit', sans-serif;
+
+  i {
+    font-size: 16px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, $admin-accent, #ffa833);
+  color: #000;
+  font-weight: 700;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #ffa833, $admin-accent);
+    box-shadow: 0 8px 24px rgba(255, 138, 0, 0.3);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: $admin-text;
+  border: 1px solid $admin-border;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 138, 0, 0.3);
+  }
+}
+
+// ===== TOASTS =====
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 1000;
+  animation: slideInUp 0.4s ease;
+
+  @media (max-width: 768px) {
+    bottom: 20px;
+    right: 20px;
+    left: 20px;
+  }
+
+  i {
+    font-size: 18px;
+  }
+}
+
+.success-toast {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: $admin-success;
+}
+
+.error-toast {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: $admin-danger;
+}
+
+// ===== ANIMATIONS =====
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

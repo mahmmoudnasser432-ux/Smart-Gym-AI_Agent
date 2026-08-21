@@ -1,0 +1,18 @@
+.bg-signup {
+    background: url("/Images/LoginLogo.png") center/cover no-repeat;
+    min-height: 100vh;
+    padding-top: 40px;
+    position: relative;
+}
+
+.bg-signup::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.content-layer {
+    position: relative;
+    z-index: 2;
+}

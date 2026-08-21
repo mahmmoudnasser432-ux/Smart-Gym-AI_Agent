@@ -1,0 +1,224 @@
+<!-- ══════════════════════════════════════════
+     FULL PAGE MODE
+════════════════════════════════════════════ -->
+@if (!compact) {
+
+<div class="plan-bg"></div>
+<div class="plan-overlay"></div>
+
+<div class="plan-wrapper">
+
+  <!-- ─── Loading ─────────────────────────────────────── -->
+  @if (loading) {
+  <div class="loading-center">
+    <div class="spinner"></div>
+    <p>Loading your plan…</p>
+  </div>
+  }
+
+  @if (!loading) {
+
+  <!-- ─── Page Title ───────────────────────────────── -->
+  <h1 class="page-title">🏆 Your AI Meal &amp; Workout Plan</h1>
+
+  <!-- ─── AI Goal Banner ──────────────────────────────── -->
+  @if (aiGoal) {
+  <div class="goal-banner">
+    <span class="goal-icon">⚖️</span>
+    <span class="goal-text">{{ aiGoal | uppercase }}</span>
+  </div>
+  }
+
+  <!-- ─── Biological Age Section ────────────────────── -->
+  @if (progressData && progressData.biologicalAge) {
+  <section class="plan-section">
+    <div class="bio-age-card">
+      <span class="bio-age-label">🧬 Biological Age</span>
+      <span class="bio-age-value">
+        {{ progressData.biologicalAge.current }} <span class="bio-age-unit">years</span>
+      </span>
+      <p class="bio-age-message"
+        [style.color]="getBioAgeMessageColor(progressData.biologicalAge.current, chronoAge)">
+        {{ getBioAgeMessage(progressData.biologicalAge.current, chronoAge) }}
+      </p>
+    </div>
+  </section>
+  }
+
+  <!-- ─── Daily Target ─────────────────────────────────── -->
+  <div class="daily-target-card">
+    <p class="dt-label">DAILY TARGET</p>
+    <p class="dt-values">
+      <span>{{ dailyTarget.calories }} kcal</span>
+      <span class="dt-sep">|</span>
+      <span>P: {{ dailyTarget.protein }}g</span>
+      <span class="dt-sep">|</span>
+      <span>C: {{ dailyTarget.carbs }}g</span>
+      <span class="dt-sep">|</span>
+      <span>F: {{ dailyTarget.fat }}g</span>
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+         MEAL PLAN
+    ══════════════════════════════════════════ -->
+  <section class="plan-section">
+    <h2 class="section-heading">🍽️ Meal Plan</h2>
+
+    @if (mealCategories.length === 0) {
+    <p class="empty-msg">No meal data available</p>
+    }
+
+    @for (meal of mealCategories; track meal.name; let mi = $index) {
+    <!-- Meal category header -->
+    <div class="meal-header">
+      <span class="meal-header-icon">{{ meal.icon }}</span>
+      <span class="meal-header-name">{{ meal.name }}</span>
+    </div>
+
+    <!-- Option tabs -->
+    @if (meal.options.length > 1) {
+    <div class="option-tabs">
+      @for (opt of meal.options; track opt.label; let oi = $index) {
+      <button class="option-tab" [class.active]="oi === meal.activeOption" (click)="selectMealOption(meal, oi)">
+        {{ opt.label }}
+      </button>
+      }
+    </div>
+    }
+
+    <!-- Active option card -->
+    @for (opt of meal.options; track opt.label; let oi = $index) {
+    @if (oi === meal.activeOption) {
+    <div class="meal-option-card">
+      <p class="food-name">{{ opt.food_name }}</p>
+      @if (opt.ingredients) {
+      <p class="food-ingredients">
+        <span class="ing-icon">🥄</span> {{ opt.ingredients }}
+      </p>
+      }
+      <div class="food-macros">
+        @if (opt.calories) {
+        <span class="calorie-badge">🔥 {{ opt.calories }} kcal</span>
+        }
+        @if (opt.protein || opt.carbs || opt.fat) {
+        <span class="macro-text">
+          P: {{ opt.protein }}g&nbsp;&nbsp;C: {{ opt.carbs }}g&nbsp;&nbsp;F: {{ opt.fat }}g
+        </span>
+        }
+      </div>
+    </div>
+    }
+    }
+    }
+  </section>
+
+  <!-- ══════════════════════════════════════════
+         WORKOUT PLAN
+    ══════════════════════════════════════════ -->
+  <section class="plan-section">
+    <h2 class="section-heading">💪 Workout Plan</h2>
+
+    @if (workoutDays.length === 0) {
+    <p class="empty-msg">No workout data available</p>
+    }
+
+    <div class="workout-days-grid">
+      @for (day of workoutDays; track $index; let di = $index) {
+      <div class="workout-day-card">
+        <!-- Day header -->
+        <div class="workout-day-header">
+          <span class="day-icon">✕</span>
+          <span class="day-label">{{ day.day || ('Day ' + (di + 1)) }}@if (day.focus) { — {{ day.focus }} }</span>
+        </div>
+
+        <div class="exercise-list">
+          <!-- Exercise rows -->
+          @for (ex of day.exercises; track $index; let ei = $index) {
+          <div class="exercise-row">
+            {{ ex.name || ('Exercise ' + (ei + 1)) }}
+            @if (ex.sets || ex.reps) {
+            <span class="ex-sets-sep"> — </span><span class="ex-sets">{{ ex.sets }} × {{ ex.reps }}</span>
+            }
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+         COACH NOTES
+    ══════════════════════════════════════════ -->
+  @if (coachNotes.length > 0) {
+  <section class="plan-section">
+    <h2 class="section-heading">📋 Coach Notes</h2>
+    @for (note of coachNotes; track note) {
+    <div class="coach-note-row">{{ note }}</div>
+    }
+  </section>
+  }
+
+  <!-- ══════════════════════════════════════════
+         ACTIONS
+    ══════════════════════════════════════════ -->
+  <div class="actions-area">
+    <button *ngIf="!hasPlan" class="btn-save" (click)="savePlan()" [disabled]="loading || downloadingPdf">
+      {{ loading ? '⏳ Saving…' : '💾 Save This Plan' }}
+    </button>
+
+    <button class="btn-pdf" (click)="downloadPdf()" [disabled]="loading || downloadingPdf">
+      {{ downloadingPdf ? '⏳ Downloading…' : '📄 Download PDF Report' }}
+    </button>
+
+    <a routerLink="/user/dashboard" class="btn-dashboard">
+      🏠 Go to Dashboard
+    </a>
+  </div>
+
+  } <!-- /!loading -->
+</div>
+
+} <!-- /!compact -->
+
+
+<!-- ══════════════════════════════════════════
+     COMPACT MODE (dashboard widget)
+════════════════════════════════════════════ -->
+@if (compact) {
+<div class="card border-0 shadow-sm rounded-4 p-4">
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <span class="label-orange">TODAY'S WORKOUT</span>
+    <div class="d-flex align-items-center gap-2">
+      <button class="btn btn-sm btn-outline-warning" [disabled]="currentDayIndex === 0" (click)="prevDay()">←</button>
+      <span class="text-warning fw-bold small">{{ currentDayIndex + 1 }} / {{ totalDays }}</span>
+      <button class="btn btn-sm btn-outline-warning" [disabled]="currentDayIndex === totalDays - 1"
+        (click)="nextDay()">→</button>
+    </div>
+  </div>
+
+  <table class="table table-dark table-hover">
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th>Exercise</th>
+        <th>Sets</th>
+        <th>Reps</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (exercise of currentDayExercises; track exercise.name; let first = $first) {
+      <tr>
+        @if (first) { <td [attr.rowspan]="currentDayExercises.length">{{ currentDayLabel }}</td> }
+        <td>{{ exercise.name }}</td>
+        <td class="ex-sets-val">{{ exercise.sets }}</td>
+        <td class="ex-reps-val">{{ exercise.reps }}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+
+</div>
+}

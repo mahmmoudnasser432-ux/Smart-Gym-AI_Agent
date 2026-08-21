@@ -1,0 +1,220 @@
+أولاً: APIs الخاصة بالـ AI
+1️⃣ Generate Plan API
+----------------------------
+POST /ai/generate-plan
+----------------------------
+Request
+
+{
+  "weight": 82,
+  "height": 178,
+  "age": 24,
+  "gender": "male",
+
+  "body_fat_pct": 21,
+  "body_fat_mass": 17,
+  "muscle_mass": 60,
+  "smm": 32,
+
+  "visceral_fat": 8,
+  "bmr": 1750,
+  "total_body_water": 45,
+
+  "activity_level": "moderate",
+  "training_frequency": 4,
+
+  "disease": "none",
+  "allergies": "none",
+
+  "budget": "moderate",
+  "language": "en"
+}
+---------------------
+Backend يقوم بتشغيل:
+
+full_agent()
+--------------------
+Response
+
+{
+  "goal": "fat_loss",
+
+  "biological_age": 31,
+
+  "calories": 2100,
+  "protein": 160,
+  "carbs": 200,
+  "fat": 65,
+
+  "plan_text": "...",
+
+  "workout_days": 4
+}
+______________________________
+
+2️⃣ AI Coach Chat API
+------------------------
+POST /ai/chat
+------------------------
+Request
+
+{
+  "user_id": 102,
+  "message": "How many calories should I eat after leg day?",
+  "context": true
+}
+-----------------------------
+Backend:
+---------------------------
+gym_chatbot()
+-------------------------
+Response
+-----------------------------
+{
+  "reply": "After a heavy leg day you should increase carbs..."
+}
+
+_______________________________________________
+
+3️⃣ Biological Age API
+----------------------
+POST /ai/biological-age
+----------------------
+Request
+
+{
+  "age": 25,
+  "gender": "male",
+  "weight": 80,
+  "height": 175,
+  "body_fat_pct": 20,
+  "smm": 32,
+  "visceral_fat": 8,
+  "bmr": 1700
+}
+------------------------
+Response
+
+{
+  "biological_age": 29
+}
+
+_______________________________
+
+
+4️⃣ Progress Analysis API
+---------------------------
+POST /ai/progress-analysis
+---------------------------
+Request
+
+{
+  "current_scan": {...},
+  "previous_scan": {...}
+}
+-----------------------
+Response
+
+{
+  "weight_change": -2.1,
+  "fat_change": -1.5,
+  "muscle_change": +0.4
+}
+
+___________________________
+
+الآن APIs الخاصة بالـ App نفسه
+
+User APIs
+
+1-Register
+-----------------------
+POST /auth/register
+----------------------
+2-Login
+--------------------
+POST /auth/login
+-----------------
+3-User Profile
+----------------------
+GET /user/profile
+
+PUT /user/profile
+----------------------
+4-InBody scans
+Save scan
+-------------
+POST /scan
+-------------
+5-Get history
+---------------------
+GET /scan/history
+--------------------
+6-Delete scan
+------------------------
+DELETE /scan/{id}
+---------------------
+Meal Plans
+
+7-Save plan
+--------------------
+POST /plans
+----------------------
+8-Get plans
+----------------------
+GET /plans
+---------------
+9-Delete plan
+----------------------------
+DELETE /plans/{id}
+-------------------
+10-PDF
+-----------------------------
+POST /plans/export-pdf
+----------------------------
+11-Chat history
+-----------------------
+GET /chat/history
+
+POST /chat/message
+-------------------------
+12-Food database
+--------------------------------
+GET /foods
+
+GET /foods/{id}
+___________________________________
+
+البنية الحقيقية للـ Backend
+
+
+أفضل stack:
+
+FastAPI
+PostgreSQL
+Redis
+Docker
+________________________________
+Architecture
+
+Mobile App
+     ↓
+API Gateway
+     ↓
+Backend (FastAPI)
+     ↓
+AI Services
+     ↓
+Database
+____________________________________
+
+قاعدة البيانات الحقيقية
+
+Tables
+
+users
+scans
+meal_plans
+chat_messages
+food_items
+subscriptions

@@ -1,0 +1,58 @@
+<!-- Navbar مدمج مباشرة -->
+<nav class="navbar navbar-expand-lg shadow-sm py-1"
+  style="background: rgba(0,0,0,0.35); backdrop-filter: blur(4px); position: fixed; top: 0; width: 100%; z-index: 1000;">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2">
+      <img src="/Images/MAinLogoOFTHEWEB.png" s alt="logo"
+        style="width: 90px; height: 65px; object-fit: contain; background: none;">
+      <span style="color:#fff; font-size:1.3rem; letter-spacing:1px;">
+        Smart<span style="color:#FFC107;">Gym</span>
+      </span>
+    </a>
+
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#guestNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="guestNav">
+      <ul class="navbar-nav align-items-center gap-3">
+        <li class="nav-item">
+          <a class="nav-link fw-semibold d-flex align-items-center gap-1" routerLink="/auth/login"
+            routerLinkActive="active" style="color:#fff; transition:color 0.2s;"
+            onmouseover="this.style.color='#FFC107'" onmouseout="this.style.color='#fff'">
+            <i class="fa-solid fa-right-to-bracket"></i> Login
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="fw-bold px-3 py-1 rounded-pill d-flex align-items-center gap-1" routerLink="/auth/signup"
+            routerLinkActive="active" style="background:#FFC107; color:#111; transition:all 0.2s;"
+            onmouseover="this.style.background='#e6ac00'" onmouseout="this.style.background='#FFC107'">
+            <i class="fa-solid fa-user-plus"></i> Sign Up
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Slider يملأ الشاشة كاملة -->
+<div class="slider-wrapper">
+  @for (slide of slides; track $index) {
+  <div class="slide" [class.active]="currentSlide === $index">
+    <img [src]="slide.image" alt="slide">
+    <div class="slide-overlay"></div>
+    <div class="slide-content" [class.show]="currentSlide === $index">
+      <h1 class="display-3 fw-bold text-white">{{ slide.title }}</h1>
+      <p class="fs-4 text-white mt-2">{{ slide.subtitle }}</p>
+    </div>
+  </div>
+  }
+
+  <!-- Dots -->
+  <div class="slider-dots">
+    @for (slide of slides; track $index) {
+    <span class="dot" [class.active]="currentSlide === $index" (click)="goToSlide($index)">
+    </span>
+    }
+  </div>
+</div>

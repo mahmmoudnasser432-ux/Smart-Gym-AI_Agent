@@ -1,0 +1,245 @@
+<div class="page-bg">
+  <div class="bg-overlay"></div>
+
+  <!-- Header -->
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()">
+      ← Back
+    </button>
+    <h1 class="page-title">Add Tokens</h1>
+  </div>
+
+  <!-- Content -->
+  <div class="store-content">
+
+    <!-- Token Balance -->
+    <div class="balance-card">
+      <span class="balance-label">Current Balance</span>
+      <div class="balance-amount">
+        <span class="token-icon">🪙</span>
+        <span class="count">{{ userTokens }}</span>
+      </div>
+    </div>
+
+    <h2 class="section-title">Token Packages</h2>
+
+    <!-- Packages List -->
+    <div class="packages-grid">
+      @for (pkg of packages; track pkg.amount) {
+      <div class="package-card" [class.popular]="pkg.popular">
+        @if (pkg.popular) {
+        <div class="popular-badge">Best Value</div>
+        }
+
+        <div class="pkg-amount">
+          <span class="token-icon">🪙</span>
+          <span class="count">{{ pkg.amount }}</span>
+        </div>
+        <span class="pkg-label">Tokens</span>
+
+        <button class="buy-btn" (click)="buyTokens(pkg)" [disabled]="isProcessing">
+          {{ isProcessing ? 'Processing...' : pkg.price + ' EGP' }}
+        </button>
+      </div>
+      }
+    </div>
+
+  </div>
+
+  <!-- History Section -->
+  @if (history.length > 0) {
+  <div class="store-content" style="padding-top: 0;">
+    <h2 class="section-title">Transaction History</h2>
+    <div class="history-list">
+      @for (item of history; track $index) {
+      <div class="history-item">
+        <div class="history-info">
+          <span class="history-amount">🪙 +{{ item.amount }} Tokens</span>
+          <span class="history-date">{{ (item.created_at || item.updated_at) | date:'MMM d, y, h:mm a' }}</span>
+        </div>
+        <span class="history-status">Success</span>
+      </div>
+      }
+    </div>
+  </div>
+  }
+
+  <!-- Success Toast -->
+  @if (showSuccess) {
+  <div class="success-toast">
+    ✅ Successfully added {{ purchasedAmount }} tokens!
+  </div>
+  }
+
+  <!-- Checkout Modal -->
+  <div class="modal-backdrop" *ngIf="showCheckoutModal" (click)="showCheckoutModal = false"
+    style="position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div class="premium-modal" (click)="$event.stopPropagation()"
+      style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 30px; width: 100%; max-width: 500px; color: #fff; box-shadow: 0 25px 50px rgba(0,0,0,0.8); font-family: 'Outfit', sans-serif;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 15px; margin-bottom: 20px;">
+        <h2 style="font-weight: 900; margin: 0; font-size: 22px; color: #ff8a00;">🪙 Buy Tokens</h2>
+        <button style="background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; opacity: 0.5;"
+          (click)="showCheckoutModal = false">✕</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        <!-- Package Summary -->
+        <div
+          style="background: rgba(255,138,0,0.05); border: 1px solid rgba(255,138,0,0.15); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="color: rgba(255,255,255,0.6); font-size: 12px;">Selected Package</div>
+            <div style="font-size: 20px; font-weight: 900; color: #fff;">🪙 {{ selectedPackageForPurchase?.amount }}
+              Tokens</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="color: rgba(255,255,255,0.6); font-size: 12px;">Price</div>
+            <div style="font-size: 24px; font-weight: 900; color: #ff8a00;">{{ selectedPackageForPurchase?.price }} EGP
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Cards Section -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h4 style="margin: 0; font-weight: 800; font-size: 14px;">Select Payment Card</h4>
+            <button
+              style="background: rgba(255,138,0,0.1); border: 1px solid rgba(255,138,0,0.2); color: #ff8a00; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer;"
+              (click)="showAddCardModal = true">
+              + Add Card
+            </button>
+          </div>
+
+          <!-- If cards are empty -->
+          <div *ngIf="paymentMethods.length === 0"
+            style="text-align: center; border: 1px dashed rgba(255,255,255,0.15); padding: 25px; border-radius: 12px;">
+            <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 12px;">No payment cards saved yet.
+            </p>
+            <button
+              style="background: #ff8a00; color: #000; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 800; font-size: 13px; cursor: pointer;"
+              (click)="showAddCardModal = true">
+              Add Demo Card
+            </button>
+          </div>
+
+          <!-- Cards Grid -->
+          <div *ngIf="paymentMethods.length > 0"
+            style="display: flex; flex-direction: column; gap: 10px; max-height: 180px; overflow-y: auto;">
+            <div *ngFor="let card of paymentMethods"
+              [style.borderColor]="selectedCardId === (card.pm_id || card.id) ? '#ff8a00' : 'rgba(255,255,255,0.08)'"
+              [style.background]="selectedCardId === (card.pm_id || card.id) ? 'rgba(255,138,0,0.03)' : 'rgba(255,255,255,0.02)'"
+              style="border: 1px solid; padding: 12px 15px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: 0.3s;"
+              (click)="selectedCardId = (card.pm_id || card.id)">
+              <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="font-size: 24px;">💳</span>
+                <div>
+                  <div style="font-weight: 800; font-size: 14px;">{{ card.card_type }} ending in {{ card.card_last4 }}
+                  </div>
+                  <div style="color: rgba(255,255,255,0.5); font-size: 11px;">Holder: {{ card.card_holder }}</div>
+                </div>
+              </div>
+              <button style="background: none; border: none; color: #ff3c3c; font-size: 16px; cursor: pointer;"
+                (click)="deleteCard(card.pm_id || card.id); $event.stopPropagation()">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 30px; display: flex; flex-direction: column; gap: 10px;">
+        <button
+          style="width: 100%; padding: 15px; background: #ff8a00; color: #000; border: none; border-radius: 12px; font-weight: 900; font-size: 16px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center;"
+          [disabled]="isProcessing || paymentMethods.length === 0"
+          (click)="executeTokenPurchase(selectedPackageForPurchase!)">
+          <span *ngIf="isProcessing">Processing Purchase...</span>
+          <span *ngIf="!isProcessing">💳 Pay & Complete Purchase</span>
+        </button>
+        <button
+          style="width: 100%; padding: 12px; background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer;"
+          (click)="showCheckoutModal = false">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Card Modal -->
+  <div class="modal-backdrop" *ngIf="showAddCardModal"
+    style="position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 2100; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div class="premium-modal" (click)="$event.stopPropagation()"
+      style="background: #0d0d0d; border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 30px; width: 100%; max-width: 450px; color: #fff; box-shadow: 0 25px 50px rgba(0,0,0,0.8); font-family: 'Outfit', sans-serif;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 15px; margin-bottom: 20px;">
+        <h3 style="font-weight: 900; margin: 0; font-size: 20px; color: #ff8a00;">💳 Add Payment Card</h3>
+        <button style="background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; opacity: 0.5;"
+          (click)="showAddCardModal = false">✕</button>
+      </div>
+
+      <div
+        style="text-align: center; margin-bottom: 20px; background: rgba(255,138,0,0.08); padding: 12px; border-radius: 10px; border: 1px solid rgba(255,138,0,0.15);">
+        <p style="font-size: 13px; color: rgba(255,255,255,0.8); margin: 0; line-height: 1.4;">
+          ⚠️ You must add a valid payment method before purchasing tokens. Please fill in card details.
+        </p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+        <div>
+          <label
+            style="display: block; font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 5px; font-weight: 700;">Card
+            Type</label>
+          <select [(ngModel)]="newCard.cardType"
+            style="width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; outline: none;">
+            <option value="Visa" style="background: #000;">Visa</option>
+            <option value="Mastercard" style="background: #000;">Mastercard</option>
+            <option value="Amex" style="background: #000;">American Express</option>
+          </select>
+        </div>
+
+        <div>
+          <label
+            style="display: block; font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 5px; font-weight: 700;">Cardholder
+            Name</label>
+          <input type="text" [(ngModel)]="newCard.cardHolder" placeholder="e.g. John Doe"
+            style="width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; outline: none;">
+        </div>
+
+        <div>
+          <label
+            style="display: block; font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 5px; font-weight: 700;">Card
+            Number</label>
+          <input type="text" [(ngModel)]="newCard.cardNumber" placeholder="4242 4242 4242 4242" maxLength="16"
+            style="width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; outline: none;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div>
+            <label
+              style="display: block; font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 5px; font-weight: 700;">Expiry
+              Date</label>
+            <input type="text" [(ngModel)]="newCard.cardExpiry" placeholder="MM/YY" maxLength="5"
+              style="width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; outline: none;">
+          </div>
+          <div>
+            <label
+              style="display: block; font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 5px; font-weight: 700;">CVV</label>
+            <input type="password" [(ngModel)]="newCard.cardCvv" placeholder="***" maxLength="3"
+              style="width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #fff; outline: none;">
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 30px; display: flex; flex-direction: column; gap: 10px;">
+        <button
+          style="width: 100%; padding: 12px; background: #ff8a00; color: #000; border: none; border-radius: 10px; font-weight: 900; font-size: 15px; cursor: pointer;"
+          (click)="addCard()">
+          Save & Purchase Package
+        </button>
+        <button
+          style="width: 100%; padding: 10px; background: none; color: rgba(255,255,255,0.5); border: none; font-weight: 800; font-size: 13px; cursor: pointer;"
+          (click)="showAddCardModal = false">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

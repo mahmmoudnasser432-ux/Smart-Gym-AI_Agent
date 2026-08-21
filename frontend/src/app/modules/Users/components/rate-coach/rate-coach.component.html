@@ -1,0 +1,141 @@
+<div class="rate-coach-container">
+  <div class="content-wrapper">
+    <!-- Header -->
+    <h1 class="page-title">Rate Coach</h1>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
+
+    <!-- Coach Selection Section -->
+    <div *ngIf="!isLoading && coaches.length > 0">
+      
+      <!-- Coach Dropdown -->
+      <div class="dropdown-container">
+        <select
+          class="glass-select"
+          [(ngModel)]="selectedCoach"
+          (change)="onCoachSelected(selectedCoach)"
+          name="coach"
+        >
+          <option [ngValue]="null" disabled selected>Select Coach</option>
+          <option *ngFor="let coach of coaches" [ngValue]="coach">
+            Coach {{ coach.username }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Error Messages -->
+      <div *ngIf="errorMessage" class="alert alert-error">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Success Messages -->
+      <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+      </div>
+
+
+
+      <!-- Rating Form (if not rated yet) -->
+      <div *ngIf="showRatingForm && selectedCoach" class="glass-card rating-form fade-in">
+        
+        <!-- Communication Rating -->
+        <div class="rating-group">
+          <label>Communication</label>
+          <div class="stars">
+            <button
+              *ngFor="let i of [1, 2, 3, 4, 5]"
+              type="button"
+              (click)="setCommunicationRating(i)"
+            >
+              <i class="fa-star" [class.fa-solid]="i <= communicationStars" [class.fa-regular]="i > communicationStars"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Knowledge Rating -->
+        <div class="rating-group">
+          <label>Knowledge</label>
+          <div class="stars">
+            <button
+              *ngFor="let i of [1, 2, 3, 4, 5]"
+              type="button"
+              (click)="setKnowledgeRating(i)"
+            >
+              <i class="fa-star" [class.fa-solid]="i <= knowledgeStars" [class.fa-regular]="i > knowledgeStars"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Attitude Rating -->
+        <div class="rating-group">
+          <label>Attitude</label>
+          <div class="stars">
+            <button
+              *ngFor="let i of [1, 2, 3, 4, 5]"
+              type="button"
+              (click)="setAttitudeRating(i)"
+            >
+              <i class="fa-star" [class.fa-solid]="i <= attitudeStars" [class.fa-regular]="i > attitudeStars"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Punctuality Rating -->
+        <div class="rating-group">
+          <label>Punctuality</label>
+          <div class="stars">
+            <button
+              *ngFor="let i of [1, 2, 3, 4, 5]"
+              type="button"
+              (click)="setPunctualityRating(i)"
+            >
+              <i class="fa-star" [class.fa-solid]="i <= punctualityStars" [class.fa-regular]="i > punctualityStars"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Comment Field -->
+        <div class="rating-group">
+          <label>Comment</label>
+          <textarea
+            class="glass-textarea"
+            [(ngModel)]="ratingData.comment"
+            name="comment"
+            placeholder="Write your comment here..."
+            maxlength="500"
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div *ngIf="showRatingForm && selectedCoach" class="action-buttons fade-in">
+        <button
+          type="button"
+          class="submit-btn"
+          (click)="submitRating()"
+          [disabled]="!isFormValid() || isSubmitting"
+        >
+          <span *ngIf="!isSubmitting">Submit Rating</span>
+          <span *ngIf="isSubmitting" class="loading">Submitting <i class="fa-solid fa-circle-notch fa-spin"></i></span>
+        </button>
+      </div>
+
+      <!-- Always show Continue button so user can go back if they succeed -->
+      <div class="action-buttons fade-in mt-3" *ngIf="selectedCoach">
+        <button
+          type="button"
+          class="continue-btn"
+          (click)="goBack()"
+        >
+          Continue to Dashboard
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

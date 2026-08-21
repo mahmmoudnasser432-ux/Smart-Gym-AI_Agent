@@ -1,0 +1,274 @@
+<div class="booking-page-container">
+  <!-- Background Overlay -->
+  <div class="page-overlay"></div>
+
+  <div class="content-wrapper">
+    <!-- Header Section -->
+    <header class="page-header">
+      <div class="header-main">
+        <h1 class="page-title">Reserve Equipment</h1>
+        <p class="page-subtitle">Skip the queue and book your favorite workout stations in advance.</p>
+      </div>
+
+      <div class="header-actions" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap; justify-content: center;">
+        <div class="token-balance-card">
+          <div class="balance-info">
+            <div class="icon-wrap">🪙</div>
+            <div class="text-wrap">
+              <span class="label">Available Tokens</span>
+              <span class="count">{{ userTokens }}</span>
+            </div>
+          </div>
+          <button class="add-tokens-btn" (click)="goAddTokens()">
+            Add Tokens +
+          </button>
+        </div>
+
+        <button class="history-btn" (click)="openHistory()" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,138,0,0.3); color: #fff; padding: 12px 20px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px;">
+          <span>📜</span> History
+        </button>
+      </div>
+    </header>
+
+    <!-- Machines Grid (2 Columns on Desktop) -->
+    <main class="machines-grid">
+      @for (machine of machines; track machine.name) {
+      <div class="machine-card-horizontal" (click)="handleMachineClick(machine)">
+        <!-- Left: Image Section -->
+        <div class="card-image-section">
+          <img [src]="machine.image" [alt]="machine.name" class="machine-img" loading="lazy">
+          <div class="image-overlay"></div>
+          <div class="token-badge">
+            <span>{{ machine.tokenPerMinute }}</span>
+            <small>Tokens/Min</small>
+          </div>
+        </div>
+
+        <!-- Middle: Info Section -->
+        <div class="card-content-section">
+          <div class="content-header">
+            <h3 class="machine-name">{{ machine.name }}</h3>
+          </div>
+          <p class="machine-description">{{ machine.description }}</p>
+        </div>
+
+        <!-- Right: Side Action Bar -->
+        <div class="card-action-section">
+          <button class="book-now-btn">
+            <span>BOOK NOW</span>
+            <i class="arrow-icon">→</i>
+          </button>
+        </div>
+      </div>
+      }
+    </main>
+
+    <!-- My Bookings Section -->
+    @if (myBookings.length > 0) {
+    <section class="my-bookings-container">
+      <div class="section-header">
+        <h2 class="section-title">My Reservations</h2>
+        <div class="booking-count">{{ myBookings.length }}</div>
+      </div>
+
+      <div class="bookings-grid">
+        @for (booking of myBookings; track $index) {
+        <div class="booking-mini-card">
+          <div class="mini-card-info">
+            <h4 class="mini-machine-name">{{ booking.machineName }}</h4>
+            <div class="mini-meta">
+              <span>📅 {{ booking.day }}</span>
+              <span>⏰ {{ formatTime(booking.from) }} - {{ formatTime(booking.to) }}</span>
+              <span style="color: #4ade80; font-weight: 800;">🟢 {{ booking.status }}</span>
+            </div>
+          </div>
+          <div class="mini-card-cost">-{{ booking.totalTokens }} Tokens</div>
+          <button class="mini-cancel-btn" (click)="cancelBooking($index); $event.stopPropagation()">
+            ✕
+          </button>
+        </div>
+        }
+      </div>
+    </section>
+    }
+  </div>
+
+  <!-- Booking Modal -->
+  @if (showModal && selectedMachine) {
+  <div class="modal-backdrop" (click)="closeModal()" @fadeIn>
+    <div class="premium-modal" (click)="$event.stopPropagation()" @popIn>
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="modal-img-preview">
+            <img [src]="selectedMachine.image" [alt]="selectedMachine.name">
+          </div>
+          <div class="modal-text">
+            <h3>{{ selectedMachine.name }}</h3>
+            <span class="rate-badge">{{ selectedMachine.tokenPerMinute }} Tokens per minute</span>
+          </div>
+        </div>
+        <button class="close-modal-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <div class="selection-grid">
+          <div class="input-group">
+            <label>Select Date</label>
+            <div class="input-wrapper">
+              <input type="date" [(ngModel)]="selectedDate" [min]="minDate" [max]="maxDate" (change)="onDateChange()">
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Start Time</label>
+            <div class="input-wrapper">
+              <input type="time" [(ngModel)]="selectedTime">
+            </div>
+          </div>
+        </div>
+
+        <!-- TIME BAR REMOVED -->
+
+        <div class="input-group full-width">
+          <label>End Time</label>
+          <div class="input-wrapper">
+            <input type="time" [(ngModel)]="selectedEndTime">
+          </div>
+          @if (selectedTime && selectedEndTime) {
+          <p class="mt-2 small fw-bold" [style.color]="isDurationValid ? '#4ade80' : '#ff6060'">
+            ⏱️ Duration: {{ durationMinutes }} min
+            @if (durationMinutes < 5) { (Min 5 minutes) } @if (durationMinutes> 120) { (Max 120 minutes) }
+          </p>
+          }
+        </div>
+
+        <!-- Summary -->
+        <div class="booking-summary" [class.insufficient]="!hasEnoughTokens">
+          <div class="summary-breakdown mb-3">
+            <div class="breakdown-item">
+              <span class="breakdown-label">Duration:</span>
+              <span class="breakdown-value">{{ durationMinutes }} Minutes</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Rate:</span>
+              <span class="breakdown-value">{{ selectedMachine.tokenPerMinute }} Token/Min</span>
+            </div>
+          </div>
+          <div class="summary-total border-top pt-2">
+            <span class="total-label">Estimated Total:</span>
+            <span class="total-value">{{ estimatedCost }} Tokens</span>
+          </div>
+          @if (!hasEnoughTokens) {
+          <p class="insufficient-text mt-2">⚠️ Insufficient balance for this booking</p>
+          }
+        </div>
+
+        <!-- Error Message -->
+        @if (errorMessage) {
+        <div class="error-banner">{{ errorMessage }}</div>
+        }
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        @if (hasEnoughTokens) {
+        <button class="action-btn primary"
+          [disabled]="!selectedDate || !selectedTime || !selectedEndTime || !isDurationValid || isBooking"
+          (click)="confirmBooking()">
+          @if (isBooking) { Processing... } @else { Confirm Reservation }
+        </button>
+        } @else {
+        <button class="action-btn primary" (click)="goAddTokens()">
+          Get More Tokens
+        </button>
+        }
+        <button class="action-btn secondary mt-3" (click)="closeModal()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Success Toast / Summary -->
+  @if (showSuccess && lastBookingSummary) {
+  <div class="booking-summary-modal" @popIn>
+    <div class="summary-card">
+      <div class="success-icon">✅</div>
+      <h2>Booking Confirmed!</h2>
+      <div class="summary-details">
+        <div class="detail-row">
+          <span>Machine:</span>
+          <strong>{{ lastBookingSummary.machineName }}</strong>
+        </div>
+        <div class="detail-row">
+          <span>Date:</span>
+          <strong>{{ lastBookingSummary.day }}</strong>
+        </div>
+        <div class="detail-row">
+          <span>Time:</span>
+          <strong>{{ formatTime(lastBookingSummary.from) }} - {{ formatTime(lastBookingSummary.to) }}</strong>
+        </div>
+        <div class="detail-row">
+          <span>Duration:</span>
+          <strong>{{ lastBookingSummary.durationMinutes }} Min</strong>
+        </div>
+        <div class="detail-row">
+          <span>Cost:</span>
+          <strong class="text-warning">{{ lastBookingSummary.totalTokens }} Tokens</strong>
+        </div>
+      </div>
+      <button class="btn btn-warning w-100 mt-4 fw-bold" (click)="showSuccess = false">Great!</button>
+    </div>
+  </div>
+  }
+
+  <!-- History Modal -->
+  @if (showHistoryModal) {
+  <div class="modal-backdrop" (click)="closeHistory()" @fadeIn>
+    <div class="premium-modal" (click)="$event.stopPropagation()" @popIn style="max-width: 600px;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="modal-text">
+            <h3>📜 Booking History</h3>
+            <span class="rate-badge" style="color: #4ade80;">Current Month & Archive</span>
+          </div>
+        </div>
+        <button class="close-modal-btn" (click)="closeHistory()">✕</button>
+      </div>
+
+      <div class="modal-body" style="max-height: 400px; overflow-y: auto; padding-top: 15px;">
+        @if (myBookings.length === 0) {
+          <div style="text-align: center; color: rgba(255,255,255,0.5); padding: 40px 20px;">
+            <p style="font-size: 16px;">No bookings found.</p>
+          </div>
+        } @else {
+          <div class="bookings-grid" style="grid-template-columns: 1fr; gap: 12px;">
+            @for (booking of myBookings; track $index) {
+            <div class="booking-mini-card">
+              <div class="mini-card-info">
+                <h4 class="mini-machine-name">{{ booking.machineName }}</h4>
+                <div class="mini-meta">
+                  <span>📅 {{ booking.day }}</span>
+                  <span>⏰ {{ formatTime(booking.from) }} - {{ formatTime(booking.to) }}</span>
+                  <span style="color: #4ade80; font-weight: 800;">🟢 {{ booking.status }}</span>
+                </div>
+              </div>
+              <div class="mini-card-cost">-{{ booking.totalTokens }} Tokens</div>
+              <button class="mini-cancel-btn" (click)="cancelBooking($index); $event.stopPropagation()" title="Cancel Booking">
+                ✕
+              </button>
+            </div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer" style="padding-top: 15px;">
+        <button class="action-btn secondary" style="width: 100%;" (click)="closeHistory()">Close</button>
+      </div>
+    </div>
+  </div>
+  }
+</div>

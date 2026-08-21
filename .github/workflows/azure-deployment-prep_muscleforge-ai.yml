@@ -1,0 +1,67 @@
+name: Build and deploy Python app to Azure Web App - muscleforge-ai
+
+on:
+  push:
+    branches:
+      - azure-deployment-prep
+    paths:
+      - 'ai_agent/**'
+      - '.github/workflows/azure-deployment-prep_muscleforge-ai.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: ai_agent/requirements.txt
+
+      - name: Install dependencies and run smoke test
+        working-directory: ai_agent
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest httpx
+          pytest -q test_smoke.py
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-app
+          path: ai_agent
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: python-app
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_398541DA698249FCB29F16F12ECF974B }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_4D5B6ABF2FE6443CB4CC80C26FC2A629 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F7010A1FC5594C52AE07289C241DE0DF }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: muscleforge-ai
+          slot-name: Production
+          package: .

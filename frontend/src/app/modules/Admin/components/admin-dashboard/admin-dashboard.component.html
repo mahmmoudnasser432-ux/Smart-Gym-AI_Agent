@@ -1,0 +1,232 @@
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm px-4 py-1"
+  style="background: #1e1e1e; border-bottom: 1px solid rgba(255, 138, 0, 0.2);">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" routerLink="/admin/dashboard" style="cursor: pointer;">
+      <img src="/Images/MAinLogoOFTHEWEB.png" alt="logo" style="width: 90px; height: 65px; object-fit: contain; background: none;">
+      <div class="fw-bold ms-2">SmartGym </div>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="adminNav">
+      <ul class="navbar-nav gap-4 align-items-center">
+        <li class="nav-item">
+          <a class="nav-link fw-bold" routerLink="/admin/dashboard" routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-bold" routerLink="/admin/add-coach" routerLinkActive="active-link">Add Coach</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-bold" routerLink="/admin/customers" routerLinkActive="active-link">Customers</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-bold" routerLink="/admin/shop" routerLinkActive="active-link">Shop</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-bold" routerLink="/admin/token-analytics" routerLinkActive="active-link">Analytics</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link text-secondary fw-bold dropdown-toggle d-flex align-items-center gap-2" href="#"
+            data-bs-toggle="dropdown">
+            👤 {{ userName || 'Admin' }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2">
+            <li>
+              
+            </li>
+            <li>
+              <a class="dropdown-item py-2" routerLink="/admin/customers">👥 Customers</a>
+            </li>
+            <li>
+              <a class="dropdown-item py-2" routerLink="/admin/token-analytics">📊 Analytics</a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item py-2 text-danger" style="cursor:pointer;" (click)="authService.logout()">
+                🚪 Logout
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+
+  <!-- TOP HEADER -->
+  <div class="top-header">
+    <div class="header-left">
+      <div class="header-label">Admin Dashboard</div>
+      <h1 class="header-title">Welcome, {{ userName }} 👋</h1>
+    </div>
+  </div>
+
+  <!-- TOP ROW: Quick Overview + Main Stat -->
+  <section class="top-stats-row">
+    <div class="section-card quick-overview-card">
+      <h4 class="section-title"><span class="title-dot"></span> Quick Overview</h4>
+      <div class="quick-stats-flex">
+        <div class="quick-stat-item">
+          <span class="qs-label"><span class="qs-icon">🏋️</span> Gym Status</span>
+          <span class="qs-value" style="color: #22c55e;">Open</span>
+        </div>
+        <div class="quick-stat-item">
+          <span class="qs-label"><span class="qs-icon">👥</span> Crowd Level</span>
+          <span class="qs-value">Moderate</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card total-members-card">
+      <div class="stat-icon-box icon-cyan">🏋️</div>
+      <div class="stat-info">
+        <span class="stat-label">Total Members</span>
+        <span class="stat-value">{{ totalMembers }}</span>
+        <span class="stat-trend up">↑ 12% this month</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTION CARDS -->
+  <section class="action-grid">
+    <div class="action-card" routerLink="/admin/add-coach">
+      <div class="action-icon icon-coach">👨‍🏫</div>
+      <h4 class="action-title">Add New Coach</h4>
+      <p class="action-desc">Register & manage coaching staff. Upload profiles & track salaries.</p>
+      <span class="action-link">Add Coach ›</span>
+    </div>
+
+    <div class="action-card" routerLink="/admin/customers">
+      <div class="action-icon icon-customers">🗑️</div>
+      <h4 class="action-title">Manage Customers</h4>
+      <p class="action-desc">View, monitor & delete customers. Track last visits & activity.</p>
+      <span class="action-link">Open Manager ›</span>
+    </div>
+
+    <div class="action-card" routerLink="/admin/shop">
+      <div class="action-icon icon-shop">🛒</div>
+      <h4 class="action-title">Shop Management</h4>
+      <p class="action-desc">Manage products, stock levels, pricing & inventory.</p>
+      <span class="action-link">Open Shop ›</span>
+    </div>
+
+    <div class="action-card" (click)="showChat = true; selectedCustomerChat = null; loadInboxUsers()">
+      <div class="action-icon icon-chat">💬</div>
+      <h4 class="action-title">Chat with Customer</h4>
+      <p class="action-desc">Direct messaging with gym members.</p>
+      <span class="action-link">Open Chat ›</span>
+    </div>
+  </section>
+</main>
+
+<!-- CHAT MODAL -->
+@if (showChat) {
+<div class="chat-overlay" (click)="showChat = false"></div>
+<div class="chat-modal">
+  <div class="chat-header">
+    <div class="d-flex align-items-center gap-2">
+      @if (selectedCustomerChat) {
+        <button class="btn btn-sm btn-outline-light py-0 px-2 me-1" (click)="selectedCustomerChat = null" style="background: none; border: 1px solid white; border-radius: 4px; color: white;">← Back</button>
+      }
+      💬 <span>{{ selectedCustomerChat ? 'Chat with ' + selectedCustomerChat.username : 'Customer Chat' }}</span>
+    </div>
+    <button class="btn-close-chat" (click)="showChat = false">✕</button>
+  </div>
+
+  @if (!selectedCustomerChat) {
+  <div class="chat-customer-select">
+    <p class="text-muted-custom small mb-3">Select a customer to chat with:</p>
+    @if (inboxUsers.length === 0) {
+      <p class="text-center text-muted-custom py-4">No conversations found</p>
+    }
+    @for (user of inboxUsers; track user.user_id) {
+    <button class="customer-select-btn" (click)="openCustomerChat(user)">
+      <div class="d-flex flex-column align-items-start text-start">
+        <span class="fw-bold">{{ user.username || 'User' }}</span>
+        @if (user.last_message) {
+          <span class="text-muted-custom small text-truncate" style="max-width: 260px;">{{ user.last_message }}</span>
+        } @else {
+          <span class="text-muted-custom small">{{ user.phone || 'No messages yet' }}</span>
+        }
+      </div>
+      @if (user.unread_count > 0) {
+        <span class="badge rounded-pill ms-2" style="background-color: #ff8a00; color: #fff;">{{ user.unread_count }}</span>
+      }
+    </button>
+    }
+  </div>
+  } @else {
+  <div class="chat-messages" #chatMessages>
+    @if (messages.length === 0 && !isLoading) {
+      <p class="text-center text-muted-custom py-4">No messages yet. Send a message to start the conversation!</p>
+    }
+    @for (msg of messages; track $index) {
+    <div class="chat-bubble" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
+      {{ msg.content }}
+      <div style="font-size: 9px; opacity: 0.6; text-align: right; margin-top: 4px;">
+        {{ msg.sent_at | date:'d MMM, h:mm a' }}
+      </div>
+    </div>
+    }
+    @if (isLoading) {
+    <div class="chat-bubble assistant">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+    </div>
+    }
+  </div>
+  <div class="chat-input-area">
+    <input class="chat-input" placeholder="Type your message..." [(ngModel)]="userMessage" (keydown)="onEnter($event)"
+      [disabled]="isLoading" />
+    <button class="chat-send-btn" (click)="sendMessage()" [disabled]="isLoading || !userMessage.trim()">➤</button>
+  </div>
+  }
+</div>
+}
+
+<div *ngIf="showProfileModal" class="profile-overlay" (click)="showProfileModal = false">
+  <div class="profile-modal" (click)="$event.stopPropagation()">
+    <div class="profile-header">
+      <h3 class="fw-bold">Admin Profile</h3>
+      <button class="btn-close" (click)="showProfileModal = false">✕</button>
+    </div>
+
+    <div class="profile-body">
+
+      <div class="profile-section mb-4">
+        <h6 class="fw-bold text-warning mb-3">Edit Information</h6>
+
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-bold">Name</label>
+          <input type="text" class="form-control rounded-3" [(ngModel)]="userName" placeholder="Your Name">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-bold">Email</label>
+          <input type="email" class="form-control rounded-3" [(ngModel)]="userEmail" placeholder="Your Email">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label text-secondary fw-bold">Phone</label>
+          <input type="text" class="form-control rounded-3" [(ngModel)]="userPhone" placeholder="Your Phone Number">
+        </div>
+
+        <button class="btn w-100 fw-bold rounded-3" style="background: #ff8a00; color: #fff;"
+          (click)="onUpdateProfile()">
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

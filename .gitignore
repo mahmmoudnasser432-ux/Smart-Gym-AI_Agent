@@ -1,0 +1,27 @@
+# تجاهل المجلدات العامة
+node_modules/
+dist/
+__pycache__/
+.venv/
+.env
+.env.local
+
+# تجاهل ملفات النظام والـ IDE
+.idea/
+.vscode/
+.DS_Store
+
+# تجاهل ملفات الداتا التقيلة
+*.xpt
+*.csv
+
+# استثناء ملف الموديل الوحيد (مهم جداً!)
+!goal_model.pkl
+# Model backups
+*_backup.pkl
+
+# Local/generated data
+saved_plans.json
+inbody_history.json
+# IDE project files
+*.iml

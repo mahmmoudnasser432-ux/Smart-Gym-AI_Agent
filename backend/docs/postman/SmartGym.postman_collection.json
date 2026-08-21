@@ -1,0 +1,279 @@
+{
+  "info": {
+    "name": "Smart Gym Using AI Agent",
+    "_postman_id": "b3c8f1b0-9bd0-4e8d-9a7d-1b7f9d6c1001",
+    "description": "Backend collection for Smart Gym Using AI Agent.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "otherUserId",
+      "value": "2"
+    },
+    {
+      "key": "machineId",
+      "value": "1"
+    },
+    {
+      "key": "bookingId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/health"
+      }
+    },
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"Test User\",\n  \"email\": \"testuser@example.com\",\n  \"password\": \"Pass123!\",\n  \"phone\": \"01000000000\"\n}"
+        },
+        "url": "{{baseUrl}}/api/auth/register"
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"testuser@example.com\",\n  \"password\": \"Pass123!\",\n  \"role\": \"user\"\n}"
+        },
+        "url": "{{baseUrl}}/api/auth/login"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json?.data?.token) {",
+              "  pm.collectionVariables.set('token', json.data.token);",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth - Profile",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/profile"
+      }
+    },
+    {
+      "name": "User - Profile",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/user/profile"
+      }
+    },
+    {
+      "name": "User - Body Data",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"weight\": 85,\n  \"height\": 175,\n  \"bodyFat\": 22,\n  \"age\": 23,\n  \"gender\": \"male\",\n  \"activityLevel\": \"moderate\",\n  \"fitnessGoal\": \"fat loss\"\n}"
+        },
+        "url": "{{baseUrl}}/api/user/body-data"
+      }
+    },
+    {
+      "name": "AI - Context",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/ai/context"
+      }
+    },
+    {
+      "name": "AI - Plan",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"weight\": 85,\n  \"height\": 175,\n  \"bodyFat\": 22,\n  \"age\": 23,\n  \"goal\": \"fat loss\"\n}"
+        },
+        "url": "{{baseUrl}}/api/ai/plan"
+      }
+    },
+    {
+      "name": "AI - Chat",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"Give me a quick fitness tip\"\n}"
+        },
+        "url": "{{baseUrl}}/api/ai/chat"
+      }
+    },
+    {
+      "name": "Machines - Available",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/machines/available"
+      }
+    },
+    {
+      "name": "Machines - Book",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"machineId\": {{machineId}},\n  \"durationMinutes\": 30\n}"
+        },
+        "url": "{{baseUrl}}/api/machines/book"
+      }
+    },
+    {
+      "name": "Machines - Cancel",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"bookingId\": {{bookingId}}\n}"
+        },
+        "url": "{{baseUrl}}/api/machines/cancel"
+      }
+    },
+    {
+      "name": "Tokens - Balance",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/tokens/balance"
+      }
+    },
+    {
+      "name": "Chat - Send",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"toUserId\": {{otherUserId}},\n  \"content\": \"Hello coach\"\n}"
+        },
+        "url": "{{baseUrl}}/api/chat/send"
+      }
+    }
+  ]
+}

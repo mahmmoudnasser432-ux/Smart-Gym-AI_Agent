@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg shadow-sm py-1" style="background: rgba(0,0,0,0.35); backdrop-filter: blur(4px);"
+>
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2">
+            <img src="/Images/MAinLogoOFTHEWEB.png" class="test"  alt="logo" >
+            <span style="color:#fff; font-size:1.3rem; letter-spacing:1px;">Smart<span style="color:#FFC107;">Gym</span></span>
+        </a>
+
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#guestNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="guestNav">
+            <ul class="navbar-nav align-items-center gap-3">
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold d-flex align-items-center gap-1" 
+                       routerLink="/auth/login" 
+                       routerLinkActive="active"
+                       style="color:#fff; transition:color 0.2s;"
+                       onmouseover="this.style.color='#FFC107'" 
+                       onmouseout="this.style.color='#fff'">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="fw-bold px-3 py-1 rounded-pill d-flex align-items-center gap-1 no d" 
+                       routerLink="/auth/signup"
+                       routerLinkActive="active"
+                       style="background:#FFC107; color:#111; transition:all 0.2s;"
+                       onmouseover="this.style.background='#e6ac00'" 
+                       onmouseout="this.style.background='#FFC107'">
+                        <i class="fa-solid fa-user-plus "></i> Sign Up
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

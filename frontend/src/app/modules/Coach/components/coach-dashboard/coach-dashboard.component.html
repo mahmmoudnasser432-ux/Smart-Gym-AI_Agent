@@ -1,0 +1,148 @@
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm px-4 py-1"
+  style="background: #1e1e1e; border-bottom: 1px solid rgba(255, 138, 0, 0.2);">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" routerLink="/coach/dashboard" style="cursor: pointer;">
+      <img src="/Images/MAinLogoOFTHEWEB.png" alt="logo" style="width: 90px; height: 65px; object-fit: contain; background: none;">
+      <div class="fw-bold ms-2">SmartGym</div>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#coachNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="coachNav">
+      <ul class="navbar-nav gap-4 align-items-center">
+        <li class="nav-item">
+          <a class="nav-link fw-bold" routerLink="/coach/dashboard" routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{exact: true}" style="color: #a0a0a0; text-decoration: none;">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-bold" routerLink="/coach/customers" routerLinkActive="active-link"
+            style="color: #a0a0a0; text-decoration: none;">Track Customers</a>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link fw-bold" style="background:none; border:none; color: #f44336;"
+            (click)="authService.logout()">Logout</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="dashboard-main">
+  <div style="margin-bottom: 24px;">
+    <h2 class="welcome-title" style="margin: 0; font-size: 32px; font-weight: 900;">Welcome, {{ userName }} 👋</h2>
+  </div>
+
+  <!-- STATS ROW -->
+  <section class="stats-row">
+    <div class="stat-glass-card">
+      <div class="stat-icon stat-icon-gym">🏋️</div>
+      <div class="stat-content">
+        <span class="stat-label">Gym Status</span>
+        <span class="stat-value">Open Now</span>
+        <span class="stat-live">● Live</span>
+      </div>
+    </div>
+    <div class="stat-glass-card">
+      <div class="stat-icon stat-icon-crowd">👥</div>
+      <div class="stat-content">
+        <span class="stat-label">Crowd Level</span>
+        <span class="stat-value">Moderate</span>
+        <span class="stat-sub">Morning</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTION CARDS GRID — NO TOKEN ANALYTICS -->
+  <section class="action-grid">
+    <div class="action-card" (click)="showChat = true; selectedCustomerChat = null">
+      <div class="action-icon icon-green">💬</div>
+      <h4 class="action-title">Chat with Customer</h4>
+      <p class="action-desc">Manage clients</p>
+      <span class="action-link">Tap to View ›</span>
+    </div>
+    <div class="action-card" (click)="showChat = true; selectedCustomerChat = null">
+      <div class="action-icon icon-purple">🤖</div>
+      <h4 class="action-title">Ask AI Coach</h4>
+      <p class="action-desc">Instant tips</p>
+      <span class="action-link">Tap to View ›</span>
+    </div>
+    <div class="action-card" routerLink="/user/booking-machine">
+      <div class="action-icon icon-orange">📅</div>
+      <h4 class="action-title">Booking Tools</h4>
+      <p class="action-desc">Reserve machines</p>
+      <span class="action-link">Tap to View ›</span>
+    </div>
+    <div class="action-card">
+      <div class="action-icon icon-blue">✨</div>
+      <h4 class="action-title">Training with AI</h4>
+      <p class="action-desc">Get your AI plan</p>
+      <span class="action-link">Tap to View ›</span>
+    </div>
+  </section>
+
+  <!-- TRACK CUSTOMERS BANNER -->
+  <section class="track-banner" routerLink="/coach/customers">
+    <div class="track-left">
+      <div class="track-icon">👥</div>
+      <div>
+        <h4 class="track-title">Track Customers</h4>
+        <p class="track-desc">Follow & manage your clients</p>
+      </div>
+    </div>
+    <span class="track-arrow">›</span>
+  </section>
+
+</main>
+
+<!-- CHAT MODAL -->
+@if (showChat) {
+<div class="chat-overlay" (click)="showChat = false"></div>
+<div class="chat-modal">
+  <div class="chat-header">
+    <div class="d-flex align-items-center gap-2">
+      💬 <span>{{ selectedCustomerChat ? 'Chat with ' + selectedCustomerChat.username : 'Customer Chat' }}</span>
+    </div>
+    <button class="btn-close-chat" (click)="showChat = false">✕</button>
+  </div>
+
+  @if (!selectedCustomerChat) {
+  <div class="chat-customer-select">
+    <p class="text-muted-custom small mb-3">Select a customer to chat with:</p>
+    @for (conversation of conversations; track conversation.user_id) {
+    <button class="customer-select-btn" (click)="openCustomerChat(conversation)">
+      <span class="fw-bold">{{ conversation.username }}</span>
+      <span class="text-muted-custom small text-truncate d-block" style="max-width: 200px;">{{ conversation.last_message
+        || 'No messages yet' }}</span>
+    </button>
+    }
+  </div>
+  } @else {
+  <div class="chat-messages" #chatMessages>
+    <div class="chat-bubble assistant">Hello! You're now chatting with {{ selectedCustomerChat.username }}. How can you
+      help them? 💪</div>
+    @for (msg of messages; track $index) {
+    <div class="chat-bubble" [class.user]="msg.role === 'coach'"
+      [class.assistant]="msg.role === 'user' || msg.role === 'assistant'">
+      {{ msg.content }}
+    </div>
+    }
+    @if (isLoading) {
+    <div class="chat-bubble assistant">
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+      <span class="typing-dot"></span>
+    </div>
+    }
+  </div>
+  <div class="chat-input-area">
+    <input class="chat-input" placeholder="Type your message..." [(ngModel)]="userMessage" (keydown)="onEnter($event)"
+      [disabled]="isLoading" />
+    <button class="chat-send-btn" (click)="sendMessage()" [disabled]="isLoading || !userMessage.trim()">➤</button>
+  </div>
+  }
+</div>
+}

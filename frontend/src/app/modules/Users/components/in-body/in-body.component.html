@@ -1,0 +1,163 @@
+<!-- BG Layer -->
+<div class="bg-layer"></div>
+<div class="bg-overlay"></div>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-screen">
+  <div class="loading-spinner"></div>
+  <p>{{ loadingText }}</p>
+</div>
+
+<!-- Empty State (No InBody Scan Found) -->
+<div *ngIf="!loading && !inBodyData" class="empty-state-container">
+  <div class="empty-card">
+    <div class="empty-icon">⚠️</div>
+    <h2>No InBody Scan Found</h2>
+    <p>Please make sure you have completed your InBody scan at the gym before accessing this page.</p>
+    <div class="empty-actions">
+      <a routerLink="/user/dashboard" class="btn-dashboard">
+        🏠 Go to Dashboard
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div *ngIf="!loading && inBodyData" class="page-content">
+
+  <!-- ✅ Success Banner -->
+  <div class="alert-banner success" *ngIf="savedToHistory">
+    ✅ Scan saved to history successfully!
+  </div>
+
+  <section class="section">
+    <div class="section-header-row">
+      <h2 class="section-heading">📱 Your InBody Scan Details</h2>
+
+      <!-- Link to InBody History -->
+      <div class="header-actions">
+        <a routerLink="/user/inbody-history" class="btn-history-link">
+          📜 View InBody History
+        </a>
+      </div>
+    </div>
+
+    <!-- Scan Date — always show, fallback to today if null -->
+    <p class="section-meta">
+      📅 Scan date: {{ inBodyData.scanDate || 'Not available' }}
+    </p>
+
+    <!-- All Scan Cards — flat grid (no AI Goal here, shown separately below) -->
+    <div class="cards-grid" *ngIf="allScanCards.length > 0">
+      <div class="metric-card" *ngFor="let card of allScanCards">
+        <span class="metric-label">{{ card.label }}</span>
+        <span class="metric-value">
+          {{ card.value }}
+          <span class="metric-unit" *ngIf="card.unit">{{ card.unit }}</span>
+        </span>
+      </div>
+    </div>
+
+
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+        SECTION 2: Additional Info
+       ═══════════════════════════════════════════════════════ -->
+  <section class="section">
+    <h2 class="section-heading">📋 Additional Info <span class="badge-note">(not in scan)</span></h2>
+    <p class="section-meta">These fields are not yet in the scan response. Fill them in or keep the defaults.</p>
+
+    <div class="form-grid four-col">
+
+      <div class="field-group">
+        <label>Age (yrs)</label>
+        <div class="stepper">
+          <button class="step-btn" (click)="decrement('age', 10, 100)">−</button>
+          <span class="step-value">{{ editableData.age }}</span>
+          <button class="step-btn" (click)="increment('age', 10, 100)">+</button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Gender</label>
+        <select class="form-select" [(ngModel)]="editableData.gender">
+          <option value="male">male</option>
+          <option value="female">female</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label>Activity Level</label>
+        <select class="form-select" [(ngModel)]="editableData.activityLevel">
+          <option value="sedentary">sedentary</option>
+          <option value="light">light</option>
+          <option value="moderate">moderate</option>
+          <option value="active">active</option>
+          <option value="very_active">very active</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label>Training days/week</label>
+        <div class="stepper">
+          <button class="step-btn" (click)="decrement('trainingDays', 1, 7)">−</button>
+          <span class="step-value">{{ editableData.trainingDays }}</span>
+          <button class="step-btn" (click)="increment('trainingDays', 1, 7)">+</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════
+        SECTION 3: Step 2 — Health, Dietary Info & Budget
+       ═══════════════════════════════════════════════════════ -->
+  <section class="section">
+    <h2 class="section-heading">⚕️ Step 2 — Health, Dietary Info &amp; Budget</h2>
+
+    <div class="ai-goal-note">
+      <span class="ai-note-text">✨ Your goal will be predicted automatically</span>
+      <span class="ai-note-sub"> by the AI model based on your InBody data.</span>
+    </div>
+
+    <div class="form-grid three-col">
+
+      <div class="field-group">
+        <label>🥜 Allergies / Dietary restrictions</label>
+        <input class="form-input" type="text" [(ngModel)]="editableData.allergies" placeholder="none" />
+      </div>
+
+      <div class="field-group">
+        <label>🩺 Diseases / Conditions</label>
+        <input class="form-input" type="text" [(ngModel)]="editableData.chronicDiseases" placeholder="none" />
+      </div>
+
+      <div class="field-group">
+        <label>💰 Budget Level <span class="info-icon" title="Budget affects meal plan ingredients">ℹ️</span></label>
+        <select class="form-select" [(ngModel)]="editableData.budgetLevel">
+          <option value="low">low</option>
+          <option value="moderate">moderate</option>
+          <option value="high">high</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Adaptive plan notice -->
+    <div class="alert-banner green" *ngIf="progressData">
+      ✅ Adaptive Plan enabled — previous scan from
+      <strong>{{ progressData.comparingTo | date:'yyyy-MM-dd HH:mm' }}</strong> found.
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-row">
+      <button class="btn-generate" (click)="generatePlan()" [disabled]="loading">
+        {{ loading ? '⏳ Generating...' : '⚡ Generate Smart Meal & Workout Plan' }}
+      </button>
+    </div>
+  </section>
+
+
+
+</div>

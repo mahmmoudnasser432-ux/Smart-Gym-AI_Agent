@@ -1,0 +1,196 @@
+.bg {
+  position: fixed;
+  inset: 0;
+  background-image: url("../../../../../../public/Images/service.png");
+  background-size: cover;
+  background-position: center;
+  z-index: -2;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: -1;
+}
+
+.page-bg {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+}
+
+.logo-badge {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: rgba(255, 193, 7, 0.12);
+  border: 1.5px solid rgba(255, 193, 7, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: #ffc107;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.page-sub {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.92rem;
+  span { color: #ffc107; font-weight: 600; }
+}
+
+.service-card {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 2px solid rgba(255, 255, 255, 0.35) !important;
+  border-radius: 20px !important;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 193, 7, 0.4) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  &.premium {
+    background: rgba(255, 193, 7, 0.08) !important;
+    border-color: rgba(255, 193, 7, 0.35) !important;
+
+    &:hover {
+      border-color: rgba(255, 193, 7, 0.6) !important;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 30px rgba(255,193,7,0.12) !important;
+    }
+  }
+}
+
+.card-icon-box {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.7);
+
+  &.gold {
+    background: rgba(255, 193, 7, 0.12);
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #ffc107;
+  }
+}
+
+.badge-plain {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.7rem;
+  letter-spacing: 0.8px;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.badge-gold {
+  background: rgba(255, 193, 7, 0.12);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  font-size: 0.7rem;
+  letter-spacing: 0.8px;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.card-title-custom {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.card-desc {
+  color: rgba(255, 255, 255, 0.42);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.feature-item {
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 0.84rem;
+  i { color: #ffc107; font-size: 0.78rem; }
+}
+
+.btn-plain {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.75);
+  border-radius: 50px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 10px 22px;
+  transition: all 0.25s;
+  cursor: pointer;
+  &:hover { background: rgba(255,255,255,0.1); color: #fff; }
+}
+
+.btn-gold {
+  background: #ffc107;
+  border: none;
+  color: #111;
+  border-radius: 50px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 10px 22px;
+  transition: all 0.25s;
+  cursor: pointer;
+  &:hover { background: #ffca2c; box-shadow: 0 0 20px rgba(255,193,7,0.35); }
+}
+
+.or-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.22);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+
+  &::before, &::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 8px 0;
+  }
+}
+
+.skip-btn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  font-size: 0.82rem;
+  padding: 8px 20px;
+  transition: all 0.25s;
+  cursor: pointer;
+  &:hover { color: rgba(255,255,255,0.65); border-color: rgba(255,255,255,0.25); }
+}
+
+.tesr{
+ background-color: #ffc107; 
+}
+

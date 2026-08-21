@@ -1,0 +1,584 @@
+// ════════════════════════════════════════════════════════
+// Tokens
+// ════════════════════════════════════════════════════════
+$bg:            #0a0c1b;
+$surface:       #10132a;
+$surface2:      #161933;
+$surface3:      #1c2040;
+$border:        rgba(255, 255, 255, 0.06);
+$border-accent: rgba(255, 255, 255, 0.12);
+$orange:        #ff8a00;
+$orange-dim:    rgba(255, 138, 0, 0.18);
+$blue-link:     #5b9cf6;
+$purple:        #7c5cbf;
+$text:          #e8eaf0;
+$text-muted:    rgba(232, 234, 240, 0.55);
+$text-dim:      rgba(232, 234, 240, 0.35);
+$green:         #22c55e;
+$red:           #ef4444;
+$radius:        8px;
+$radius-lg:     14px;
+
+// ════════════════════════════════════════════════════════
+// Background
+// ════════════════════════════════════════════════════════
+.plan-bg {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.7)),
+              url('/Images/123-photo.jpg') center / cover no-repeat fixed;
+  z-index: -2;
+}
+
+.plan-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 10, 26, 0.72);
+  backdrop-filter: blur(6px);
+  z-index: -1;
+}
+
+// ════════════════════════════════════════════════════════
+// Wrapper
+// ════════════════════════════════════════════════════════
+.plan-wrapper {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+  color: $text;
+  font-family: 'Inter', 'Outfit', sans-serif;
+}
+
+// ════════════════════════════════════════════════════════
+// Loading
+// ════════════════════════════════════════════════════════
+.loading-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 18px;
+  color: $text-muted;
+  font-size: 15px;
+}
+.spinner {
+  width: 42px; height: 42px;
+  border: 3px solid rgba(255,255,255,.08);
+  border-top-color: $orange;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// ════════════════════════════════════════════════════════
+// Page Title
+// ════════════════════════════════════════════════════════
+.page-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: $text;
+  margin: 0 0 24px;
+}
+
+// ════════════════════════════════════════════════════════
+// Goal Banner (BALANCED)
+// ════════════════════════════════════════════════════════
+.goal-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #4f7fff 0%, #6a5af9 100%);
+  border-radius: $radius-lg;
+  padding: 18px 32px;
+  margin-bottom: 24px;
+
+  .goal-icon { font-size: 22px; }
+
+  .goal-text {
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 2px;
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// Daily Target card
+// ════════════════════════════════════════════════════════
+.daily-target-card {
+  background: $surface2;
+  border: 1px solid $border-accent;
+  border-radius: $radius;
+  padding: 16px 22px;
+  margin-bottom: 32px;
+
+  .dt-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: $text-dim;
+    margin: 0 0 8px;
+  }
+
+  .dt-values {
+    font-size: 16px;
+    font-weight: 600;
+    color: $text;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .dt-sep {
+    color: $text-dim;
+    font-weight: 300;
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// Sections
+// ════════════════════════════════════════════════════════
+.plan-section {
+  margin-bottom: 48px;
+}
+
+.section-heading {
+  font-size: 20px;
+  font-weight: 700;
+  color: $text;
+  margin: 0 0 20px;
+}
+
+.empty-msg {
+  color: $text-muted;
+  font-size: 14px;
+  padding: 16px 0;
+}
+
+// ════════════════════════════════════════════════════════
+// MEAL PLAN
+// ════════════════════════════════════════════════════════
+
+// Category header bar
+.meal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: $surface2;
+  border: 1px solid $border-accent;
+  border-left: 3px solid $orange;
+  border-radius: $radius;
+  padding: 12px 18px;
+  margin-bottom: 0;
+
+  .meal-header-icon { font-size: 18px; }
+  .meal-header-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: $text;
+  }
+}
+
+// Option A / Option B tabs
+.option-tabs {
+  display: flex;
+  gap: 0;
+  background: $surface;
+  border: 1px solid $border;
+  border-top: none;
+  padding: 8px 16px 0;
+
+  .option-tab {
+    background: none;
+    border: none;
+    padding: 6px 14px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: $text-muted;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all .2s;
+
+    &.active {
+      color: $orange;
+      border-bottom-color: $orange;
+    }
+
+    &:hover:not(.active) {
+      color: $text;
+    }
+  }
+}
+
+// Meal option card
+.meal-option-card {
+  background: $surface3;
+  border: 1px solid $border;
+  border-top: none;
+  border-radius: 0 0 $radius $radius;
+  padding: 16px 18px 14px;
+  margin-bottom: 18px;
+
+  .food-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: $blue-link;
+    margin: 0 0 6px;
+  }
+
+  .food-ingredients {
+    font-size: 13px;
+    color: $text-muted;
+    margin: 0 0 10px;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+
+    .ing-icon { font-size: 12px; }
+  }
+
+  .food-macros {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .calorie-badge {
+    background: rgba(255, 138, 0, 0.15);
+    border: 1px solid rgba(255, 138, 0, 0.3);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: $orange;
+  }
+
+  .macro-text {
+    font-size: 12px;
+    color: $text-muted;
+    font-weight: 500;
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// WORKOUT PLAN
+// ════════════════════════════════════════════════════════
+
+.workout-days-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  align-items: start;
+  margin-top: 16px;
+}
+
+.workout-day-card {
+  display: flex;
+  flex-direction: column;
+
+  .workout-day-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: $surface2;
+    border: 1px solid $border-accent;
+    border-radius: $radius;
+    padding: 12px 18px;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    .day-icon {
+      color: $orange;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .day-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: $text;
+    }
+  }
+
+  &:has(.exercise-row) {
+    .workout-day-header {
+      border-radius: $radius $radius 0 0;
+    }
+  }
+
+  .exercise-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .exercise-row {
+    background: $surface;
+    border: 1px solid $border;
+    border-top: none;
+    padding: 11px 18px;
+    font-size: 14px;
+    color: $text;
+    font-weight: 700;
+    border-radius: 0;
+
+    &:last-of-type {
+      border-radius: 0 0 $radius $radius;
+      margin-bottom: 0;
+    }
+
+    .ex-sets {
+      color: $orange;
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .ex-sets-sep {
+      color: $text-muted;
+      font-weight: 700;
+    }
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// COACH NOTES
+// ════════════════════════════════════════════════════════
+
+.coach-note-row {
+  background: $surface;
+  border: 1px solid $border;
+  border-left: 3px solid $purple;
+  border-radius: $radius;
+  padding: 12px 18px;
+  font-size: 14px;
+  color: $text;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.55;
+}
+
+// ════════════════════════════════════════════════════════
+// ACTIONS
+// ════════════════════════════════════════════════════════
+.actions-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-top: 20px;
+}
+
+.btn-save {
+  padding: 14px 48px;
+  border-radius: $radius;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  background: $surface2;
+  color: $text;
+  border: 1px solid $border-accent;
+  transition: all .25s;
+
+  &:hover:not(:disabled) {
+    background: $surface3;
+    border-color: rgba(255,255,255,.2);
+  }
+
+  &:disabled { opacity: .5; cursor: not-allowed; }
+}
+
+.btn-pdf {
+  width: 100%;
+  padding: 15px;
+  border-radius: $radius;
+  border: 1px solid $border-accent;
+  background: $surface;
+  color: $text;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .25s;
+
+  &:hover:not(:disabled) {
+    background: $surface2;
+    border-color: rgba(255,255,255,.2);
+  }
+
+  &:disabled { opacity: .5; cursor: not-allowed; }
+}
+
+.btn-dashboard {
+  width: 100%;
+  padding: 15px;
+  border-radius: $radius;
+  border: 1px solid rgba(255, 138, 0, 0.25);
+  background: rgba(255, 138, 0, 0.08);
+  color: $orange;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  display: block;
+  transition: all .25s;
+
+  &:hover {
+    background: rgba(255, 138, 0, 0.18);
+    border-color: $orange;
+    color: #fff;
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// Responsive
+// ════════════════════════════════════════════════════════
+@media (max-width: 600px) {
+  .plan-wrapper { padding: 24px 12px 60px; }
+  .page-title   { font-size: 20px; }
+  .goal-banner  { padding: 14px 20px; .goal-text { font-size: 18px; } }
+  .dt-values    { font-size: 14px; }
+  .btn-save     { width: 100%; }
+}
+
+// ════════════════════════════════════════════════════════
+// Compact (dashboard widget) – kept from Bootstrap classes
+// ════════════════════════════════════════════════════════
+.label-orange {
+  color: $orange;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+// ════════════════════════════════════════════════════════
+// Progress Section (moved from InBody)
+// ════════════════════════════════════════════════════════
+.section-meta {
+  font-size: 13px;
+  color: $text-muted;
+  margin: -10px 0 20px;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 4px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 380px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metric-card {
+  background: $surface2;
+  border: 1px solid $border-accent;
+  border-radius: $radius;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &.progress-card {
+    gap: 4px;
+  }
+}
+
+.metric-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: $text-dim;
+}
+
+.metric-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #4f7fff;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.metric-unit {
+  font-size: 13px;
+  font-weight: 400;
+  color: $text-muted;
+}
+
+.diff-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.diff-badge {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.status-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.bio-age-card {
+  max-width: 500px;
+  margin: 24px auto 0;
+  background: $surface3;
+  border: 1px solid rgba(138, 92, 246, 0.3);
+  border-radius: $radius-lg;
+  padding: 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bio-age-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: $text;
+}
+
+.bio-age-value {
+  font-size: 36px;
+  font-weight: 800;
+  color: #4f7fff;
+}
+
+.bio-age-unit {
+  font-size: 18px;
+  font-weight: 700;
+  color: $text;
+}
+
+.bio-age-message {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.ex-sets-val, .ex-reps-val {
+  color: $orange !important;
+  font-weight: 800 !important;
+}

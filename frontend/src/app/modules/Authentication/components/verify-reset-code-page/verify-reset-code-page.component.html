@@ -1,0 +1,49 @@
+<div class="container-fluid bg-login d-flex align-items-center justify-content-center text-white">
+  <div class="row w-100 px-4 content-layer">
+
+    <div class="col-lg-5 mb-4">
+      <div class="card bg-dark bg-opacity-75 border-light shadow p-4 text-white">
+
+        <h3 class="text-center mb-2">Verify Reset Code</h3>
+        <p class="text-center text-secondary small mb-4">
+          Enter the 6-digit code sent to your email.
+        </p>
+
+        <form [formGroup]="verifyForm" (ngSubmit)="onSubmit()">
+
+          <div class="mb-3">
+            <label>Reset Code</label>
+            <input class="form-control text-center fw-bold fs-4 letter-spacing"
+                   formControlName="resetCode"
+                   placeholder="000000"
+                   maxlength="6">
+
+            @if (verifyForm.get('resetCode')?.touched && verifyForm.get('resetCode')?.invalid) {
+              @if (verifyForm.get('resetCode')?.errors?.['required']) {
+                <div class="text-danger small mt-1">Code is required</div>
+              }
+              @if (verifyForm.get('resetCode')?.errors?.['minlength']) {
+                <div class="text-danger small mt-1">Code must be 6 digits</div>
+              }
+            }
+          </div>
+
+          <button type="submit" class="btn btn-warning w-100 fw-bold" [disabled]="loading">
+            {{ loading ? 'Verifying...' : 'Verify Code' }}
+          </button>
+
+          @if (errorMsg) {
+            <div class="text-danger text-center mt-3">{{ errorMsg }}</div>
+          }
+
+          <div class="text-center mt-3">
+            <a routerLink="/auth/forgot-password" class="text-light text-decoration-underline">
+              Resend Code
+            </a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

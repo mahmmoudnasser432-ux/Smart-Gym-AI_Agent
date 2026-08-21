@@ -1,0 +1,33 @@
+{
+  "name": "smartgymusingaiagentbackend",
+  "version": "1.0.0",
+  "description": "Smart Gym Using AI Agent backend",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "node --test tests/**/*.test.js",
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "db:setup": "node scripts/setup-db.js",
+    "db:seed": "node seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.10.1",
+    "mssql": "^12.2.0",
+    "multer": "^2.1.1",
+    "nodemailer": "^9.0.1",
+    "socket.io": "^4.8.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
