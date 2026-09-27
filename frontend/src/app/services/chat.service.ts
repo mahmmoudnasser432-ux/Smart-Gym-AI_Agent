@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, Subject, of, map } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { io, Socket } from 'socket.io-client';
-import { environment } from '../Environments/environments.develompent';
+import { environment } from '../Environments/environment.development';
 
 export interface ChatMessage {
   message_id?: number;

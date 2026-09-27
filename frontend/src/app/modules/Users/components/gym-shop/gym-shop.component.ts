@@ -5,7 +5,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { ShopService } from '../../services/shop.service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthenticationService } from '../../../Authentication/services/authentication.service';
-import { environment } from '../../../../Environments/environments.develompent';
+import { environment } from '../../../../Environments/environment.development';
 
 interface Product {
   id: number;

@@ -3,7 +3,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { AuthenticationService } from '../../../Authentication/services/authentication.service';
-import { environment } from '../../../../Environments/environments.develompent';
+import { environment } from '../../../../Environments/environment.development';
 import { TokenService } from '../../services/token.service';
 import { ChatService, ChatMessage } from '../../../../services/chat.service';
 

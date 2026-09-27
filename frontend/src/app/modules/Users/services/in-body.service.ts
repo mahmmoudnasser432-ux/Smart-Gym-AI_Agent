@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../../Environments/environments.develompent';
+import { environment } from '../../../Environments/environment.development';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 

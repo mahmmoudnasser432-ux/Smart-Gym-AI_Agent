@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ShopService } from '../../../Users/services/shop.service';
-import { environment } from '../../../../Environments/environments.develompent';
+import { environment } from '../../../../Environments/environment.development';
 
 interface Product {
   id: number;
